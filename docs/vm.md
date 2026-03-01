@@ -66,6 +66,7 @@ the compiler verifies*; this document defines *how* compiled code is represented
     * [Switch statements](#switch-statements)
     * [Match expressions](#match-expressions)
 * [Program startup](#program-startup)
+* [VM invocation (nlvm)](#vm-invocation-nlvm)
 * [Standard library binding](#standard-library-binding)
 * [Threading model](#threading-model)
 * [Garbage collection contract](#garbage-collection-contract)
@@ -921,6 +922,37 @@ END:
    Begin execution.
 7. **Exit.** When `main` returns, use the returned `int` value as the process exit code. If an unhandled
    exception propagates out of `main`, print the exception and stack trace to stderr and exit with code `1`.
+
+---
+
+## VM invocation (nlvm)
+
+The VM is invoked as:
+
+    nlvm [options] <module-or-program> [--] [program args...]
+
+### Arguments
+
+| Argument | Description |
+|----------|-------------|
+| `<module-or-program>` | Path to the main module (`.nlm`) or to a program bundle (implementation-defined). This module (or the designated entry in the bundle) must contain the `main(int, string[])` entry point (see [specs.md § Entry point](specs.md#entry-point)). |
+| `[program args...]` | Optional arguments passed to the NL program as `args` (after `args[0]`, the program name). The VM builds `argc` and `args` as described in [Program startup](#program-startup). |
+
+If `--` is used, everything after it is passed as program arguments; otherwise, the first unrecognized non-option argument starts the module path and subsequent arguments are program args.
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `--version` | Print VM version and exit. |
+| `-h`, `--help` | Print usage and exit. |
+| `-v`, `--verbose` | Verbose execution (e.g. module loading, implementation-defined). |
+| `-D<path>`, `--module-path <path>` | *(Optional)* Additional directory or list of directories for resolving module dependencies (implementation-defined). |
+
+### Exit codes
+
+- The VM exits with the return value of `main` (see [Program startup](#program-startup)).
+- If an unhandled exception propagates out of `main`, the VM prints the exception and stack trace to stderr and exits with code `1`.
 
 ---
 

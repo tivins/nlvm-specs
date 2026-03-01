@@ -12,8 +12,8 @@ This document describes the recommended phases for building a complete NL toolch
 |---|-----------|-------------|----------------|
 | 1 | [Lexer & Parser](#milestone-1--lexer--parser) | AST for all NL syntax | specs.md |
 | 2 | [Semantic analysis](#milestone-2--semantic-analysis) | Error diagnostics (31 codes, 1 warning) | compiler.md, specs.md |
-| 3 | [Bytecode emission](#milestone-3--bytecode-emission) | Valid `.nlm` modules | vm.md §§ Module format, Compilation strategies |
-| 4 | [VM core](#milestone-4--vm-core) | Execute primitive programs | vm.md §§ Architecture, Value representation, Instruction set, Program startup |
+| 3 | [Bytecode emission](#milestone-3--bytecode-emission) | Valid `.nlm` modules | vm.md §§ Module format, Compilation strategies; compiler.md § [Compiler invocation (nlc)](compiler.md#compiler-invocation-nlc) |
+| 4 | [VM core](#milestone-4--vm-core) | Execute primitive programs | vm.md §§ Architecture, Value representation, Instruction set, Program startup, [VM invocation (nlvm)](vm.md#vm-invocation-nlvm) |
 | 5 | [Objects, arrays & dispatch](#milestone-5--objects-arrays--dispatch) | OOP programs run | vm.md §§ Object model, Method dispatch |
 | 6 | [Exceptions & closures](#milestone-6--exceptions--closures) | Full control flow | vm.md §§ Exception handling, Closures |
 | 7 | [Standard library](#milestone-7--standard-library) | Native bindings for `system.*` | stdlib.md, vm.md § Standard library binding |

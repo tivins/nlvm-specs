@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.3 — 2026-03-01
+
+### Added
+
+- **docs/compiler.md** — § Compiler invocation (nlc): CLI specification for the compiler (arguments, options `-o`, `--entry`, `-c`, `--version`, `-h`, `-Werror`, `-v`, exit codes, conventions).
+- **docs/vm.md** — § VM invocation (nlvm): CLI specification for the VM (arguments, options `--version`, `-h`, `-v`, `--module-path`, exit codes).
+- **README.md** — Table links to compiler and VM CLI sections.
+- **docs/milestones.md** — Summary table references to compiler.md § Compiler invocation (nlc) and vm.md § VM invocation (nlvm).
+
 ## 0.3.2 — 2026-03-01
 
 ### Added

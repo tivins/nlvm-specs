@@ -34,6 +34,7 @@ complements [specs.md](specs.md) (language semantics) and [stdlib.md](stdlib.md)
     * [Nodiscard](#nodiscard)
 * [Reserved keywords](#reserved-keywords)
 * [Default values](#default-values)
+* [Compiler invocation (nlc)](#compiler-invocation-nlc)
 
 ---
 
@@ -398,3 +399,41 @@ Non-nullable reference properties have no default and must be initialized — se
 | E030 | Keywords | Reserved keyword used as identifier |
 | E031 | Arrays | Fixed-size array of non-nullable type |
 | W001 | Warning | Nodiscard return value discarded |
+
+---
+
+## Compiler invocation (nlc)
+
+The compiler is invoked as:
+
+    nlc [options] <sources...>
+
+### Arguments
+
+| Argument | Description |
+|----------|-------------|
+| `<sources...>` | One or more NL source files (`.nl`). Each file is compiled to one module (see [vm.md § Module format](vm.md#module-format)). Order may matter for entry/module resolution; the first file or a designated entry is used as the program entry when producing an executable bundle. |
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `-o <dir>`, `--output <dir>` | Output directory for emitted modules (`.nlm`). Default: current directory or implementation-defined. |
+| `--entry <path>` | *(Optional)* Path of the source file that contains the program entry point (`main`). If omitted, the implementation may use the first file or require exactly one module with `main`. |
+| `-c` | Compile only; emit modules and do not link or produce a runnable bundle. |
+| `--version` | Print compiler version and exit. |
+| `-h`, `--help` | Print usage and exit. |
+| `-Werror` | Treat all warnings as errors. |
+| `-v`, `--verbose` | Verbose diagnostics (implementation-defined). |
+
+### Exit codes
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success; all sources compiled. |
+| Non-zero | Compilation failed (syntax error, semantic error per [Error code summary](#error-code-summary), or I/O error). |
+
+### Conventions
+
+- Source paths follow the one-class-per-file convention; directory structure reflects namespace (see [specs.md § Source code files](specs.md#source-code-files)).
+- Output module names or paths are derived from the fully qualified class name (e.g. `com.example.App` → `com/example/App.nlm` or implementation-defined).

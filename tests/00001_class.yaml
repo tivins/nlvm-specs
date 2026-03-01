@@ -1,4 +1,5 @@
 ---
+# Test format described in docs/tests.md
 title: "Class parsing, instantiation, typing and auto"
 file_separator: "#NLFILE"
 expected_exit_code: 0
