@@ -1,15 +1,27 @@
-# tests/00001_class.yaml
-
 ---
-title: "Testing class parsing, instantiation, typing and auto"
+title: "Class parsing, instantiation, typing and auto"
+file_separator: "#NLFILE"
 expected_exit_code: 0
 expected_stdout: ""
+# Optional: module-structure checks for the ClassTest module (test/class/ClassTest.nl)
+expected_class: "test.class.ClassTest"
+expected_methods: ["<construct>", "<destruct>"]
 ---
 
+#NLFILE test/class/ClassTest.nl
 namespace test.class;
 class ClassTest {
 	public construct() {}
 	public destruct() {}
 }
-ClassTest classTestExplicit = new ClassTest();
-auto classTestAuto = new ClassTest();
+
+#NLFILE test/class/Main.nl
+namespace test.class;
+use test.class.ClassTest;
+class Main {
+	public static int main(int argc, string[] args) {
+		ClassTest a = new ClassTest();
+		auto b = new ClassTest();
+		return 0;
+	}
+}

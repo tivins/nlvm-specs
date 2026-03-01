@@ -10,6 +10,9 @@
   for all major language features (templates, ref params, switch/match, ++/--, string concatenation,
   union types, operator overloading, nullish coalescing / elvis). Provisional rules documented for
   unspecified keywords (`virtual`, `abstract`, `final`, `clone`, `delete`).
+- **docs/tests.md** — Test file format: YAML front matter (title, file_separator, expected_exit_code,
+  expected_stdout, expected_stderr, compile_only), source blocks with separator line (`#NLFILE path`),
+  multi-file layout and run vs compile-only semantics. README updated to reference tests.md.
 
 ## 0.2.0
 

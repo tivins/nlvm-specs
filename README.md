@@ -12,6 +12,7 @@ This repository holds the **complete specification** of NL: language semantics, 
 | **[docs/compiler.md](docs/compiler.md)** | **Compiler semantic analyses.** Definite assignment, null safety, type checking, immutability (`const` / `readonly`), exception checking, visibility, parameter validation, entry-point validation. Defines *what* the compiler must verify and reject (31 error codes, 1 warning). |
 | **[docs/stdlib.md](docs/stdlib.md)** | **Standard library API.** System namespaces (`system`, `system.io`, `system.net`, `system.thread`, `system.time`, etc.): streams, parsing, files, directories, network (TCP/UDP/HTTP), threads, mutex/semaphore, date/time, env, process listing, subprocess execution, regex, encoding. Defines the contract between user code and the runtime. |
 | **[docs/vm.md](docs/vm.md)** | **Virtual machine specification.** Stack-based execution model, value representation, binary module format (constant pool, class/field/method descriptors), object/array/string layout, instruction set (~50 opcodes), method dispatch (vtables), exception handling (tables, unwinding, stack trace), closures, compilation strategies (templates, ref params, switch/match, etc.), program startup, stdlib binding, threading, and GC contract. Defines *how* compiled code is represented and executed. |
+| **[docs/tests.md](docs/tests.md)** | **Test format.** Structure of test files in `tests/` (YAML front matter, header keys, source blocks with `#NLFILE`-style separators, run vs compile-only). For use by a future compiler/tooling. |
 
 Read **specs.md** first for the language; then **compiler.md** for compile-time rules, **stdlib.md** for the runtime API, and **vm.md** for implementing an interpreter or code generator.
 
@@ -23,6 +24,7 @@ vvm/
 │   ├── specs.md      # Language specification
 │   ├── compiler.md   # Compiler checks and error codes
 │   ├── stdlib.md     # Standard library
+│   ├── tests.md      # Test file format (YAML, source blocks)
 │   └── vm.md         # VM and bytecode specification
 ├── tests/            # Example / acceptance test definitions (YAML)
 │   └── 00001_class.yaml
@@ -30,7 +32,7 @@ vvm/
 └── README.md
 ```
 
-Tests in `tests/` are described in YAML (title, expected exit code, expected stdout, and NL source). They are intended for use by a future compiler/tooling; the repo does not include a test runner.
+Tests in `tests/` are described in YAML with multiple NL source blocks per file (see [docs/tests.md](docs/tests.md)). They are intended for use by a future compiler/tooling; the repo does not include a test runner.
 
 ## Using these specs
 
