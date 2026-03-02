@@ -671,6 +671,9 @@ arguments, the compiler generates a **specialized version** with those types sub
   fields, methods, and vtable.
 - Template method `Utils.max<int>` and `Utils.max<float>` produce two separate static methods.
 
+Bounded type parameters (`template <type T extends Bound>`) are enforced at compile time only. The compiler
+rejects instantiations where the concrete type does not satisfy the bound (see [specs.md § Bounded type parameters](specs.md#bounded-type-parameters), [compiler.md § Template instantiation](compiler.md#template-instantiation)). No bound metadata survives into bytecode.
+
 No template metadata survives into bytecode. The VM does not know about user-defined templates.
 
 **Native template classes** (`system.List<T>`, `system.Map<K,V>`) are a special case: these are provided by

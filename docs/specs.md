@@ -42,6 +42,7 @@ write concise code without sacrificing type safety or runtime guarantees.
     * [Readonly](#readonly)
     * [Nodiscard](#nodiscard)
     * [Template class](#template-class)
+        * [Bounded type parameters](#bounded-type-parameters)
     * [Template methods](#template-methods)
     * [Extends, Implements](#extends-implements)
     * [Abstract classes and methods](#abstract-classes-and-methods)
@@ -1106,11 +1107,41 @@ Vector<int> v1 = new Vector<int>(1, 2, 3);
 Vector<float> v1 = new Vector<float>(.1, .2, .3);
 ```
 
+#### Bounded type parameters
+
+Type parameters can be constrained with `extends` to require that the concrete type is a subtype of a given class or interface. This enables earlier, clearer compile-time errors and documents the template contract.
+
+Syntax: `template <type T extends Bound>` where `Bound` is a class or interface. The concrete type argument must implement the interface (or extend the class) at instantiation time.
+
+```nl
+// Stringable is defined in § Extends, Implements — requires string toString()
+template <type T extends Stringable>
+class Formatter {
+    public string format(const T value) {
+        return value.toString();
+    }
+}
+
+class Person implements Stringable {
+    public string name;
+    public string toString() { return this.name; }
+}
+
+Formatter<Person> f = new Formatter<Person>();  // OK: Person implements Stringable
+// Formatter<int> g = new Formatter<int>();    // Error: int does not implement Stringable
+```
+
+- **Reference types:** The concrete type must implement the interface or extend the bound class.
+- **Primitive types:** Primitives (`int`, `float`, `bool`, `byte`) do not implement interfaces; they satisfy only unconstrained type parameters or bounds that explicitly include them (e.g. via built-in rules, if any).
+- **Multiple bounds:** Not supported; use a single class or interface as the bound.
+
+Bounded type parameters apply to both template classes and template methods. See [compiler.md § Template instantiation](compiler.md#template-instantiation) for verification rules.
+
 ### Template methods
 
 In addition to template classes, NL supports template methods, which allow you to define methods that work with generic types without making the entire class a template. Template methods enable you to write type-safe, reusable code for operations that should work with multiple types.
 
-Template methods are declared using the `template <type T>` syntax before the method signature. The type parameter can then be used in the method's parameters, return type, and body.
+Template methods are declared using the `template <type T>` or `template <type T extends Bound>` syntax before the method signature. The type parameter can then be used in the method's parameters, return type, and body. [Bounded type parameters](#bounded-type-parameters) apply to template methods as well.
 
 ```nl
 class Utils {

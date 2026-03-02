@@ -135,10 +135,11 @@ the compiler generates a specialized version with those types substituted and th
 The compiler must verify:
 - All operations used on the type parameter are valid for the concrete type (e.g. `a > b` requires that the type
   supports `operator>`).
-- Template arguments satisfy the expected usage (no bounded generics in the current spec, so this is checked
-  structurally at instantiation).
+- **Bounded type parameters:** When a type parameter is declared with `extends Bound` (see [specs.md § Bounded type parameters](specs.md#bounded-type-parameters)), the concrete type argument must be a subtype of the bound (implement the interface or extend the class). This is checked at instantiation time, before structural verification.
+- **Unbounded parameters:** When no bound is specified, template arguments are checked structurally: all operations used on the type parameter must be valid for the concrete type.
 
-**Error:** `E006 — Type '%s' does not support operator '%s' (required by template '%s')`
+**Error:** `E006 — Type '%s' does not support operator '%s' (required by template '%s')`  
+**Error:** `E037 — Type '%s' does not satisfy bound '%s' (required by template '%s')`
 
 ### Cast validation
 
@@ -398,6 +399,7 @@ Non-nullable reference properties have no default and must be initialized — se
 | E004 | Type checking | Type not assignable to target type |
 | E005 | Auto deduction | Auto without initializer |
 | E006 | Templates | Type does not support required operator |
+| E037 | Templates | Type does not satisfy template bound |
 | E007 | Cast | Invalid cast |
 | E008 | String concatenation | Non-Stringable type in concatenation |
 | E009 | Operators | Operator not defined for types |

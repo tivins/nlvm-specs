@@ -62,7 +62,7 @@ Implement all compile-time checks defined in compiler.md. This milestone require
 - **Type system:** primitives, arrays, union types (`T|null`), `auto` deduction, `typedef` aliases, class/interface subtyping, template instantiation (monomorphization).
 - **Definite assignment analysis** — [compiler.md § Definite assignment](compiler.md#definite-assignment-analysis): E001, E002.
 - **Null safety** — [compiler.md § Null safety](compiler.md#null-safety): E003, E004.
-- **Type checking** — [compiler.md § Type checking](compiler.md#type-checking): `auto` (E005), templates (E006), casts (E007), string concatenation (E008), operator compatibility (E009).
+- **Type checking** — [compiler.md § Type checking](compiler.md#type-checking): `auto` (E005), templates (E006, E037), casts (E007), string concatenation (E008), operator compatibility (E009).
 - **Immutability enforcement** — [compiler.md § Immutability](compiler.md#immutability-enforcement): `const` methods (E010, E011), `const` parameters (E012), `readonly` (E013, E014).
 - **Exception checking** — [compiler.md § Exception checking](compiler.md#exception-checking): checked propagation (E015), inheritance rules (E016, E017).
 - **Visibility enforcement** — [compiler.md § Visibility](compiler.md#visibility-enforcement): E018, E019.
@@ -231,7 +231,7 @@ Build the test runner that executes the YAML test suite, and validate the full t
 - **Compile-only tests** (`compile_only: true`): compile and verify success, no execution.
 - **Module-structure assertions:** parse the compiled module and verify `expected_class`, `expected_methods`, `expected_fields`, `expected_constant_pool_contains`.
 - **Test discovery:** scan `tests/` directory, run all `*.yaml` files, report pass/fail summary.
-- **Error tests (extension):** tests that verify the compiler correctly rejects invalid programs with specific error codes (E001–E031, W001). Requires extending the test format or adding a convention (e.g. `expected_error: "E003"` header key).
+- **Error tests (extension):** tests that verify the compiler correctly rejects invalid programs with specific error codes (E001–E037, W001). Requires extending the test format or adding a convention (e.g. `expected_error: "E003"` header key).
 
 ### Testable at this stage
 

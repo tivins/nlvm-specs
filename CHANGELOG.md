@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0 — 2026-03-02
+
+### Added
+
+- **docs/specs.md** — § Bounded type parameters: `template <type T extends Bound>` syntax to constrain type parameters to a class or interface. Enables earlier compile-time errors and documentation of template contracts (coherence § VI-4).
+- **docs/compiler.md** — E037: Type does not satisfy template bound. Template instantiation verifies bounded parameters at compile time.
+
+### Changed
+
+- **docs/compiler.md** — § Template instantiation: added bounded generics verification; concrete type must be subtype of bound.
+- **docs/vm.md** — § Templates: noted that bounded constraints are compile-time only; no bound metadata in bytecode.
+- **README.md** — Language highlights: Generics now mention bounded type parameters; error code count 36 → 37.
+- **docs/coherence.md** — VI-4 resolved: bounded generics specified.
+- **docs/milestones.md** — Type checking: added E037; error tests range E001–E037.
+
 ## 0.4.0 — 2026-03-02
 
 ### Added

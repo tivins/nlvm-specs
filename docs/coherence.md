@@ -18,7 +18,7 @@ plus a full re-audit of `docs/` performed on 2026-03-01.
 | [III. Cross-document contradictions](#iii-cross-document-contradictions) | 2 | specs.md vs compiler.md, or stdlib.md vs specs.md |
 | [IV. Incorrect or misleading examples](#iv-incorrect-or-misleading-examples) | 4 | Code examples that would not compile or behave as shown |
 | [V. Under-specified elements](#v-under-specified-elements) | 2 | Features used or referenced but incompletely defined |
-| [VI. Missing features](#vi-missing-features) | 5 | Identified gaps (not blocking but tracked) |
+| [VI. Missing features](#vi-missing-features) | 4 | Identified gaps (not blocking but tracked) |
 
 ---
 
@@ -184,9 +184,9 @@ tracked here for completeness. Some may be intentional design choices.
 
 ### VI-4. Bounded generics
 
-- [ ] No syntax like `template <type T extends Comparable>` to constrain type parameters. Verification is
-  purely structural at instantiation (compiler.md:130-138). This limits compile-time error messages and
-  documentation of template contracts.
+- [x] **Resolved (2026-03-02):** Added `template <type T extends Bound>` syntax in specs.md § Bounded type parameters.
+  Compiler verifies bound at instantiation (compiler.md § Template instantiation, E037). Enables earlier compile-time
+  errors and documentation of template contracts.
 
 ### VI-5. Multiple return values / tuples
 
