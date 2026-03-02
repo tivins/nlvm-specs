@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.0 — 2026-03-02
+
+### Added
+
+- **docs/stdlib.md** — § system.MapEntry&lt;K, V&gt;: new result type representing a key-value pair, with `K key` and `V value` fields. Used by `Map.entries()` and for-each iteration over maps.
+- **docs/stdlib.md** — § system.Map: `keys()` returning `K[]`, `values()` returning `V[]`, `entries()` returning `MapEntry<K,V>[]`, and `forEach((K key, V value) => void f)` for callback-based iteration. Maps now support the for-each loop (`for (const auto entry : map)`). Iteration order is consistent across methods but implementation-defined (coherence § V-3).
+- **docs/vm.md** — § For-each loops: added Map desugaring — compiler calls `entries()` then iterates the resulting array with an index-based loop.
+- **docs/vm.md** — § Standard library binding: documented native dispatch for Map/List instance methods and `Map.forEach` closure invocation.
+
+### Changed
+
+- **docs/vm.md** — § Templates: `system.MapEntry<K,V>` added to the list of native template classes alongside List and Map.
+- **docs/coherence.md** — V-3 resolved: Map iteration API fully specified.
+
 ## 0.6.0 — 2026-03-02
 
 ### Added

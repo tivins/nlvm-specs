@@ -47,7 +47,7 @@ This document describes the virtual standard library provided by the NL runtime 
 
 | Namespace   | Purpose                          |
 |------------|-----------------------------------|
-| `system`   | Standard streams (Out, Err, In), parsing and conversion (Int, Float, Bool), String, Random, Uuid, **List&lt;T&gt;**, **Map&lt;K,V&gt;** |
+| `system`   | Standard streams (Out, Err, In), parsing and conversion (Int, Float, Bool), String, Random, Uuid, **List&lt;T&gt;**, **Map&lt;K,V&gt;**, **MapEntry&lt;K,V&gt;** |
 | `system.io`| File system (File, FileHandle, Directory, Path), glob, Grep |
 | `system.net`| Network (TcpListener, TcpStream, UdpSocket, Http) |
 | `system.thread`| Threads (Thread), synchronization (Mutex, Semaphore) |
@@ -122,6 +122,17 @@ Returned by **`system.ps.Process.run()`**. Represents the outcome of a completed
 | `exitCode` | `int`    | Process exit code. |
 | `stdout`   | `string` | Standard output captured from the process. |
 | `stderr`   | `string` | Standard error captured from the process. |
+
+---
+
+### system.MapEntry&lt;K, V&gt;
+
+Returned by **`system.Map.entries()`** and used during **for-each iteration** over a map. Represents a single key-value pair. This is a native template result type — the runtime provides monomorphized instances (e.g. `MapEntry<string, int>`) as needed.
+
+| Field   | Type | Description |
+|---------|------|-------------|
+| `key`   | `K`  | The key of the entry. |
+| `value` | `V`  | The value associated with the key. |
 
 ---
 
@@ -374,8 +385,12 @@ Key-value storage with keys of type `K` and values of type `V`. Lives in namespa
 | `set` | `void set(K key, V value)` | Associates `key` with `value` (insert or update). |
 | `remove` | `bool remove(K key)` | Removes the entry for `key`. Returns `true` if the key was present. |
 | `has` | `bool has(K key)` | Returns `true` if `key` is in the map. |
+| `keys` | `K[] keys()` | Returns an array containing all keys in the map. |
+| `values` | `V[] values()` | Returns an array containing all values in the map, in the same order as `keys()`. |
+| `entries` | `MapEntry<K,V>[] entries()` | Returns an array of all key-value pairs as [MapEntry](#result-types) objects. |
+| `forEach` | `void forEach((K key, V value) => void f)` | Invokes `f` for each key-value pair in the map. |
 
-Iteration over keys or entries is implementation-defined (e.g. via keys() returning K[] or for-each support).
+Maps support the [for-each loop](specs.md#loops): `for (const auto entry : map) { ... }` iterates over `MapEntry<K,V>` objects. The iteration order of `keys()`, `values()`, `entries()`, `forEach()`, and for-each is **consistent** (all produce elements in the same order for the same map state), but the specific ordering (e.g. insertion order vs. arbitrary) is **implementation-defined**.
 
 **Example**
 
@@ -386,6 +401,22 @@ map.set("two", 2);
 int|null v = map.get("one");  // 1
 bool b = map.has("two");      // true
 map.remove("one");
+
+// Iteration via keys / values / entries
+string[] k = map.keys();              // e.g. ["two"]
+int[] vals = map.values();             // e.g. [2]
+auto pairs = map.entries();            // MapEntry<string, int>[]
+
+// Callback-based iteration
+map.set("three", 3);
+map.forEach((string key, int val) => {
+    system.Out.println(key + " = " + val);
+});
+
+// For-each loop (iterates over MapEntry<K,V>)
+for (const auto entry : map) {
+    system.Out.println(entry.key + " -> " + entry.value);
+}
 ```
 
 ---

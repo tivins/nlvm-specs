@@ -676,12 +676,13 @@ rejects instantiations where the concrete type does not satisfy the bound (see [
 
 No template metadata survives into bytecode. The VM does not know about user-defined templates.
 
-**Native template classes** (`system.List<T>`, `system.Map<K,V>`) are a special case: these are provided by
-the runtime, not compiled from NL source. The compiler emits monomorphized class names in constant pool
-references (e.g. `"system.List<int>"`, `"system.Map<string, int>"`). The VM recognizes these as native
-template instantiations and provides type-appropriate implementations. Internally, the native implementation
-may use a single generic implementation with tagged values (since all VM values are already tagged), but this
-is an implementation detail.
+**Native template classes** (`system.List<T>`, `system.Map<K,V>`, `system.MapEntry<K,V>`) are a special
+case: these are provided by the runtime, not compiled from NL source. The compiler emits monomorphized class
+names in constant pool references (e.g. `"system.List<int>"`, `"system.Map<string, int>"`,
+`"system.MapEntry<string, int>"`). The VM recognizes these as native template instantiations and provides
+type-appropriate implementations. Internally, the native implementation may use a single generic
+implementation with tagged values (since all VM values are already tagged), but this is an implementation
+detail.
 
 For **`system.Map<K,V>`**, key lookup uses:
 - **Primitives** (`int`, `float`, `bool`, `byte`) and **`string`**: built-in value equality.
@@ -770,6 +771,30 @@ type.
   LOOP_END:
   ```
 - **For `system.List<T>`**: same pattern using `list.size()` and `list.get(i)` via `INVOKE_INSTANCE`.
+- **For `system.Map<K,V>`**: the compiler calls `entries()` to obtain a `MapEntry<K,V>[]`, then iterates
+  over the resulting array with an index-based loop:
+  ```
+  // for (const auto entry : map)
+  LOAD         map_local
+  INVOKE_INSTANCE <system.Map.entries() -> MapEntry[]>
+  STORE        entries_local
+  CONST_IZERO
+  STORE        i_local
+  LOOP_START:
+  LOAD         i_local
+  LOAD         entries_local
+  ARRAY_LENGTH
+  CMP_LT
+  IF_FALSE     LOOP_END
+  LOAD         entries_local
+  LOAD         i_local
+  ARRAY_LOAD
+  STORE        entry_local
+  // ... loop body (entry.key via GET_FIELD, entry.value via GET_FIELD) ...
+  IINC         i_local, 1
+  GOTO         LOOP_START
+  LOOP_END:
+  ```
 
 ### Named and optional parameters
 
@@ -981,6 +1006,11 @@ on array objects. `ARRAY_LENGTH` is a dedicated opcode for `length()` (performan
 methods are invoked via `INVOKE_INSTANCE` on the array reference and dispatched to native implementations by
 the VM. Methods that accept callbacks (`map`, `filter`, `forEach`, `sort`, `find`) receive a closure object
 as an argument; the native implementation calls `INVOKE_CLOSURE` internally for each element.
+
+`system.List<T>` and `system.Map<K,V>` instance methods (`size`, `get`, `set`, `keys`, `values`, `entries`,
+`forEach`, etc.) are dispatched via `INVOKE_INSTANCE` on the native object reference. `Map.forEach` receives
+a closure with two parameters (key, value); the native implementation calls `INVOKE_CLOSURE` for each entry.
+`Map.entries()` returns a native array of `MapEntry<K,V>` objects (see [stdlib.md § Result types](stdlib.md#result-types)).
 
 ---
 

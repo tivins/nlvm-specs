@@ -17,7 +17,7 @@ plus a full re-audit of `docs/` performed on 2026-03-01.
 | [II. Nonexistent references](#ii-nonexistent-references) | 3 | Methods, types, or functions used but never defined |
 | [III. Cross-document contradictions](#iii-cross-document-contradictions) | 2 | specs.md vs compiler.md, or stdlib.md vs specs.md |
 | [IV. Incorrect or misleading examples](#iv-incorrect-or-misleading-examples) | 4 | Code examples that would not compile or behave as shown |
-| [V. Under-specified elements](#v-under-specified-elements) | 2 | Features used or referenced but incompletely defined |
+| [V. Under-specified elements](#v-under-specified-elements) | 1 | Features used or referenced but incompletely defined |
 | [VI. Missing features](#vi-missing-features) | 4 | Identified gaps (not blocking but tracked) |
 
 ---
@@ -142,9 +142,11 @@ Additionally, specs.md contradicts **itself**:
 
 ### V-3. Map iteration not defined
 
-- [ ] **stdlib.md:375** — "Iteration over keys or entries is implementation-defined." This leaves `system.Map`
-  unusable for any logic that requires iterating entries. Needs concrete API: `keys()` returning `K[]`,
-  `values()` returning `V[]`, `entries()`, or for-each support.
+- [x] **Resolved (2026-03-02):** Added concrete iteration API to `system.Map<K,V>`: **`keys()`** returning `K[]`,
+  **`values()`** returning `V[]`, **`entries()`** returning `MapEntry<K,V>[]`, and **`forEach((K key, V value) => void f)`**.
+  Added **`system.MapEntry<K,V>`** result type (stdlib.md § Result types). Maps support the **for-each loop**
+  (`for (const auto entry : map)`). Iteration order is consistent across methods but implementation-defined.
+  VM desugaring specified in vm.md § For-each loops. Native binding in vm.md § Standard library binding.
 
 ### V-4. Multidimensional array creation not specified
 
