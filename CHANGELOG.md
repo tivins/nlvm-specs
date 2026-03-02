@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.2 — 2026-03-03
+
+### Added
+
+- **docs/coherence.md** — New coherence tracker: 66 items across 7 categories (cross-document inconsistencies, language spec omissions, incorrect examples, VM/compiler gaps, stdlib issues, under-specified semantics, editorial errors). Full re-audit of all specification documents.
+
 ## 0.8.1 — 2026-03-03
 
 ### Changed
