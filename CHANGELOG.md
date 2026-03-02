@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.4.0 — 2026-03-02
+
+### Added
+
+- **docs/specs.md** — § Abstract classes and methods: abstract class, abstract method, rules, interaction with constructors.
+- **docs/specs.md** — § Final classes and methods: final class (prevents inheritance), final method (prevents override).
+- **docs/specs.md** — § Virtual method dispatch: all instance methods virtual by default (Java-style); no explicit `virtual` keyword.
+- **docs/specs.md** — § Cloneable interface: `Self clone()` method, shallow copy by default; no dedicated `clone` keyword.
+- **docs/compiler.md** — § Inheritance modifiers: error codes E032–E036 for abstract/final violations.
+
+### Changed
+
+- **docs/specs.md** — Keywords: removed `virtual`, `delete`, `clone`; added links for `abstract`, `final`. Lifecycle: `new` only (no delete/clone).
+- **docs/specs.md** — Destructor: wording corrected — "when the object becomes unreachable and is reclaimed by the garbage collector" (no explicit delete).
+- **docs/specs.md** — Operators: removed `delete` and `clone` from the list.
+- **docs/vm.md** — Replaced "Extensions (not yet specified)" with § Object lifecycle; removed provisional rules for virtual/abstract/final/clone/delete.
+- **docs/vm.md** — Instance methods: updated to reflect specified abstract/final semantics.
+- **docs/coherence.md** — V-2 resolved: all five keywords now specified or removed.
+
 ## 0.3.4 — 2026-03-02
 
 ### Fixed
@@ -15,6 +34,11 @@
 ### Added
 
 - **docs/specs.md** — § Planned: section for future spec features; `char` type listed as potentially added later.
+
+### Declined
+
+- **do-while loop** — NL will not implement `do-while`; `while` with `break` is sufficient (coherence § VI-1).
+- **Multiple return values / tuples** — NL will not support tuples or multiple return values; use a custom class (coherence § VI-5).
 
 ## 0.3.3 — 2026-03-01
 

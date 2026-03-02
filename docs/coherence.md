@@ -17,7 +17,7 @@ plus a full re-audit of `docs/` performed on 2026-03-01.
 | [II. Nonexistent references](#ii-nonexistent-references) | 3 | Methods, types, or functions used but never defined |
 | [III. Cross-document contradictions](#iii-cross-document-contradictions) | 2 | specs.md vs compiler.md, or stdlib.md vs specs.md |
 | [IV. Incorrect or misleading examples](#iv-incorrect-or-misleading-examples) | 4 | Code examples that would not compile or behave as shown |
-| [V. Under-specified elements](#v-under-specified-elements) | 5 | Features used or referenced but incompletely defined |
+| [V. Under-specified elements](#v-under-specified-elements) | 2 | Features used or referenced but incompletely defined |
 | [VI. Missing features](#vi-missing-features) | 5 | Identified gaps (not blocking but tracked) |
 
 ---
@@ -138,14 +138,7 @@ Additionally, specs.md contradicts **itself**:
 
 ### V-2. Keywords declared but never defined
 
-The following keywords appear in the keywords table (specs.md:155-166) but have no defined semantics.
-vm.md:989-1001 has provisional rules (reject at compile time) but the language-level behavior is unspecified.
-
-- [ ] **`virtual`** — Which methods are virtual by default? Is explicit `virtual` required?
-- [ ] **`abstract`** — Abstract classes and methods: declaration syntax, rules, interaction with constructors.
-- [ ] **`final`** — On a class (prevents inheritance)? On a method (prevents override)? Both?
-- [ ] **`clone`** — Deep or shallow? Interface requirement? Syntax?
-- [ ] **`delete`** — Manual destruction? Interaction with GC and destructors?
+- [x] **Resolved (2026-03-02):** All five items specified in specs.md. **`virtual`** — Removed from keywords; all instance methods are virtual by default (Java-style), documented in § Virtual method dispatch. **`abstract`** — § Abstract classes and methods: abstract class, abstract method, rules. **`final`** — § Final classes and methods: final class (no extends), final method (no override). **`clone`** — Removed from keywords; replaced by Cloneable interface with `clone()` method (§ Cloneable interface); shallow copy by default. **`delete`** — Removed from keywords; GC-only, no manual destruction; destructor wording corrected.
 
 ### V-3. Map iteration not defined
 
@@ -178,14 +171,11 @@ tracked here for completeness. Some may be intentional design choices.
 
 ### VI-1. `do-while` loop
 
-- [ ] No `do { ... } while (condition);` loop. Not in keywords, not in control structures. Common in most
-  C-family languages.
+- [x] **Won't fix:** NL will not implement `do-while`. `while` with `break` is sufficient.
 
 ### VI-2. try-with-resources / RAII
 
-- [ ] No mechanism for automatic resource cleanup at scope exit (like Java's `try-with-resources`, C#'s
-  `using`, or C++ RAII). The only cleanup mechanism is the destructor, whose timing is
-  implementation-defined (vm.md:983-985).
+- [x] **Noted in specs.md § Planned:** No mechanism specified for now; destructor timing remains implementation-defined. A dedicated construct may be considered in a future version.
 
 ### VI-3. `equals()` / `hashCode()` convention
 
@@ -200,7 +190,8 @@ tracked here for completeness. Some may be intentional design choices.
 
 ### VI-5. Multiple return values / tuples
 
-- [ ] No tuple type or multiple return values. Workarounds: return a custom class, or use `ref` parameters.
+- [x] **Won't fix:** NL will not support tuples or multiple return values. Use a custom class to return
+  multiple values.
 
 ---
 

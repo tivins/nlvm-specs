@@ -26,6 +26,7 @@ complements [specs.md](specs.md) (language semantics) and [stdlib.md](stdlib.md)
     * [Checked exception propagation](#checked-exception-propagation)
     * [Exception inheritance rules](#exception-inheritance-rules)
 * [Visibility enforcement](#visibility-enforcement)
+* [Inheritance modifiers (abstract, final)](#inheritance-modifiers-abstract-final)
 * [Parameter validation](#parameter-validation)
     * [Ref parameter rules](#ref-parameter-rules)
     * [Named and optional parameter rules](#named-and-optional-parameter-rules)
@@ -262,6 +263,30 @@ Omitting it is a compile-time error.
 
 ---
 
+## Inheritance modifiers (abstract, final)
+
+The compiler enforces the rules for `abstract` and `final` as defined in [specs.md § Abstract classes and methods](specs.md#abstract-classes-and-methods) and [specs.md § Final classes and methods](specs.md#final-classes-and-methods).
+
+### Abstract classes and methods
+
+- An abstract class cannot be instantiated with `new`.
+- A class that declares or inherits an abstract method without implementing it must be declared `abstract`.
+- An abstract method has no body (ends with `;`).
+
+**Error:** `E032 — Cannot instantiate abstract class '%s'`
+**Error:** `E033 — Class '%s' must be declared abstract (has unimplemented abstract method '%s')`
+**Error:** `E034 — Abstract method '%s' cannot have a body`
+
+### Final classes and methods
+
+- A final class cannot be extended.
+- A final method cannot be overridden.
+
+**Error:** `E035 — Cannot extend final class '%s'`
+**Error:** `E036 — Cannot override final method '%s'`
+
+---
+
 ## Parameter validation
 
 ### Ref parameter rules
@@ -398,6 +423,11 @@ Non-nullable reference properties have no default and must be initialized — se
 | E029 | Entry point | Incorrect main signature |
 | E030 | Keywords | Reserved keyword used as identifier |
 | E031 | Arrays | Fixed-size array of non-nullable type |
+| E032 | Abstract/Final | Cannot instantiate abstract class |
+| E033 | Abstract/Final | Class must be abstract (unimplemented abstract method) |
+| E034 | Abstract/Final | Abstract method cannot have body |
+| E035 | Abstract/Final | Cannot extend final class |
+| E036 | Abstract/Final | Cannot override final method |
 | W001 | Warning | Nodiscard return value discarded |
 
 ---

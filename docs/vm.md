@@ -70,7 +70,7 @@ the compiler verifies*; this document defines *how* compiled code is represented
 * [Standard library binding](#standard-library-binding)
 * [Threading model](#threading-model)
 * [Garbage collection contract](#garbage-collection-contract)
-* [Extensions (not yet specified)](#extensions-not-yet-specified)
+* [Object lifecycle](#object-lifecycle)
 
 ---
 
@@ -548,11 +548,7 @@ The vtable is an array of method pointers, one per non-static, non-private metho
 another, it inherits the parent's vtable entries and overrides slots for methods it redefines. The vtable
 index for each method is determined at class load time.
 
-> **Provisional:** Currently, all non-static, non-private instance methods participate in virtual dispatch
-> (equivalent to Java's default behavior). When the keywords `virtual`, `abstract`, and `final` are specified
-> in the language (see [Extensions](#extensions-not-yet-specified)), the dispatch rules will be refined:
-> `final` methods may bypass the vtable; `abstract` methods will have no implementation in the declaring class;
-> non-`virtual` methods may be dispatched statically.
+All non-static, non-private instance methods participate in virtual dispatch by default (see [specs.md § Virtual method dispatch](specs.md#virtual-method-dispatch)). Abstract methods have no implementation in the declaring class; concrete subclasses provide the implementation. Final methods cannot be overridden; the compiler may optimize calls to final methods by bypassing the vtable when the receiver's static type is known.
 
 ### Constructors
 
@@ -1018,16 +1014,8 @@ implementation-defined.
 
 ---
 
-## Extensions (not yet specified)
+## Object lifecycle
 
-The following language features are listed as keywords in [specs.md § Keywords](specs.md#keywords) but do not
-yet have defined semantics. When these features are specified, this VM specification will be updated. Until
-then, the following provisional rules apply:
+Object lifetime is managed entirely by the garbage collector. There is no `delete` keyword or manual destruction. The VM reclaims heap objects when they become unreachable. Destructors (`destruct`) are called before reclamation; see [Garbage collection contract](#garbage-collection-contract).
 
-| Keyword | Provisional VM behavior |
-|---------|------------------------|
-| `virtual` | All non-static, non-private instance methods are treated as virtual (dispatched through the vtable). |
-| `abstract` | Not supported. The compiler should reject abstract classes and methods. |
-| `final` | Not supported. All methods are overridable; all classes are extendable. |
-| `clone` | Not supported. The compiler should reject `clone` expressions. |
-| `delete` | Not supported. Object lifetime is managed entirely by the garbage collector. |
+Object cloning is provided via the **Cloneable** interface and the `clone()` method (see [specs.md § Cloneable interface](specs.md#cloneable-interface)). There is no dedicated `clone` keyword.

@@ -44,6 +44,10 @@ write concise code without sacrificing type safety or runtime guarantees.
     * [Template class](#template-class)
     * [Template methods](#template-methods)
     * [Extends, Implements](#extends-implements)
+    * [Abstract classes and methods](#abstract-classes-and-methods)
+    * [Final classes and methods](#final-classes-and-methods)
+    * [Virtual method dispatch](#virtual-method-dispatch)
+    * [Cloneable interface](#cloneable-interface)
 * [Enums](#enums)
     * [Basic enums](#basic-enums)
     * [Typed enums](#typed-enums-string-or-int)
@@ -160,10 +164,10 @@ class Application {
 | Types and literals       | [`auto`][4], [`const`][5], [`ref`][23], [`void`][6], `true`, `false`, [`null`][7], `return`                                      |
 | Reserved                 | `undefined`                                                                                                          |
 | Object-oriented          | [`class`][18], `interface`, [`namespace`][8], [`extends`][9], [`implements`][9], [`super`][21], [`Self`][10], [`type`][10], [`use`][22], [`as`][22] |
-| Visibility and modifiers | [`private`][19], [`public`][19], [`protected`][19], [`static`][5], `final`, `virtual`, `abstract`, [`readonly`][11], [`nodiscard`][20]       |
+| Visibility and modifiers | [`private`][19], [`public`][19], [`protected`][19], [`static`][5], [`final`][24], [`abstract`][25], [`readonly`][11], [`nodiscard`][20]       |
 | Templates and generics   | [`template`][12], [`operator`][13]                                                                                   |
 | Exceptions               | [`try`][14], [`catch`][14], [`finally`][14], [`throw`][15], [`throws`][15]                                           |
-| Lifecycle                | [`construct`][16], [`destruct`][16], `new`, `delete`, `clone`                                                    |
+| Lifecycle                | [`construct`][16], [`destruct`][16], `new`                                                                          |
 | Other                    | [`enum`][17], [`typedef`](#typedef)                                                                                              |
 
 ### Identifiers
@@ -668,7 +672,7 @@ class Resource
 }
 ```
 
-The destructor is automatically called when the object goes out of scope or is explicitly deleted.
+The destructor is automatically called when the object becomes unreachable and is reclaimed by the garbage collector. The exact timing is implementation-defined (see [vm.md § Garbage collection contract](vm.md#garbage-collection-contract)).
 
 ### Class methods
 
@@ -1181,6 +1185,100 @@ interface Stringable {
 }
 ```
 
+### Abstract classes and methods
+
+An **abstract class** cannot be instantiated directly. It may declare **abstract methods** — methods without a body that must be implemented by concrete subclasses. A class that declares or inherits any abstract method must itself be declared `abstract`.
+
+```nl
+abstract class Shape {
+    public abstract float area();
+    public abstract float perimeter();
+}
+
+class Rectangle extends Shape {
+    private float width;
+    private float height;
+
+    public construct(float width, float height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public float area() {
+        return this.width * this.height;
+    }
+
+    public float perimeter() {
+        return 2 * (this.width + this.height);
+    }
+}
+```
+
+Rules:
+- An abstract class cannot be instantiated with `new`.
+- An abstract method has no body (no `{ }` block); it ends with `;`.
+- A concrete class that extends an abstract class must implement all inherited abstract methods.
+- Interface methods are implicitly abstract (no body in the interface).
+- An abstract class may have constructors; they are invoked when a concrete subclass is instantiated via `super(...)`.
+
+### Final classes and methods
+
+The `final` modifier restricts inheritance and overriding:
+
+- **`final class`** — The class cannot be extended. No other class may use `extends` with it.
+- **`final method`** — The method cannot be overridden in subclasses.
+
+```nl
+final class StringUtils {
+    public static string trim(string s) { /* ... */ }
+}
+// class Extended extends StringUtils { }  // Error: cannot extend final class
+
+class Base {
+    public final void cannotOverride() { /* ... */ }
+}
+class Derived extends Base {
+    // public void cannotOverride() { }  // Error: cannot override final method
+}
+```
+
+Rules:
+- A `final` class cannot have abstract methods.
+- `final` and `abstract` are mutually exclusive on a method (a method cannot be both).
+- Private methods are implicitly final (they are not visible to subclasses and thus cannot be overridden).
+
+### Virtual method dispatch
+
+All non-static, non-private instance methods participate in **virtual dispatch** by default (equivalent to Java's behavior). When a method is called on an object, the implementation is chosen at runtime based on the object's actual class, not the static type of the variable.
+
+No explicit `virtual` keyword is required. Methods are virtual by default. The `final` modifier opts out of overriding (and thus of further virtual dispatch in subclasses).
+
+### Cloneable interface
+
+Object cloning is provided via the **Cloneable** interface. A class that implements Cloneable must provide a method `Self clone()` returning a copy of the object. The default semantics are **shallow copy**: reference-type fields are copied by reference, not recursively cloned. For deep copy semantics, implement a custom method (e.g. `deepClone()`).
+
+```nl
+interface Cloneable {
+    public Self clone();
+}
+
+class Point implements Cloneable {
+    public int x;
+    public int y;
+
+    public construct(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Self clone() {
+        return new Point(this.x, this.y);
+    }
+}
+```
+
+Usage: `auto copy = original.clone();` — no dedicated `clone` keyword. The `clone()` method is an ordinary instance method.
+
 ## Enums
 
 ### Basic enums
@@ -1613,8 +1711,6 @@ The string representation of `int`, `float`, and `bool` is implementation-define
 - `[]` (array/collection access)
 - `.` (member access)
 - `new` (object instantiation)
-- `delete` (object destruction)
-- `clone` (object cloning)
 - **`(T) expr`** (cast) — explicit type conversion. See [Type conversions and casting](#type-conversions-and-casting) for allowed conversions, implicit vs explicit rules, and runtime behavior. The cast to string **`(string) expr`** converts a value to string using the same rules as [string concatenation](#string-concatenation): primitives use their built-in string representation; reference types that implement [Stringable](#stringable-interface) use `toString()`; otherwise it is a compile-time error.
 
 ### Conditional operators
@@ -2159,6 +2255,8 @@ The following features may be added to the spec in future versions:
 
 - **`char` type** — A dedicated scalar type for a single character (e.g. Unicode codepoint). Currently, a character is represented as a `string` of length 1.
 
+- **RAII / try-with-resources** — No mechanism for automatic resource cleanup at scope exit (like Java's `try-with-resources`, C#'s `using`, or C++ RAII) is specified for now. The only cleanup mechanism is the destructor, whose timing is implementation-defined. A dedicated construct may be considered in a future version.
+
 
 [1]: #conditionals
 
@@ -2205,3 +2303,7 @@ The following features may be added to the spec in future versions:
 [22]: #imports
 
 [23]: #parameter-passing-semantics
+
+[24]: #final-classes-and-methods
+
+[25]: #abstract-classes-and-methods
