@@ -5,6 +5,11 @@
 ### Fixed
 
 - **docs/specs.md** — Exception inheritance rules: adopted Liskov-compatible rule from compiler.md (coherence § III-1). Child may declare `E` or a subclass of `E` for each parent exception; `throws IOException` alone is valid when parent has `throws Exception, IOException`. Updated examples for E016/E017.
+- **docs/stdlib.md** — Arrays § built-in methods summary: added `forEach()`, `sort()`, `find()` to match specs.md and vm.md (coherence § III-2).
+- **docs/specs.md** — Custom exception example: added `super(message);` as first statement in MyException constructor (coherence § IV-1).
+- **docs/specs.md** — Entry point example: `argc < 3` → `argc < 4` since example accesses args[1], args[2], args[3] (coherence § IV-2).
+- **docs/specs.md** — Anonymous function examples: parameter types `string` → `string|null` where null is checked (coherence § IV-3).
+- **docs/specs.md** — Enum methods: translated `from()` / `tryFrom()` descriptions from French to English (coherence § IV-4).
 - **docs/specs.md** — Removed undefined `char` from scalar types list in Parameter passing semantics (coherence § II-2). Documented that a character is represented as a `string` of length 1.
 
 ### Added

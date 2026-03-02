@@ -1220,8 +1220,8 @@ static Self from(string value)
 static Self|null tryFrom(string value)
 ```
 
-- **`from(value)`** : convertit la chaîne en valeur d’enum correspondante. Lève **`IllegalArgumentException`** (sous-classe de `RuntimeException`) si `value` ne correspond à aucun cas de l’enum.
-- **`tryFrom(value)`** : même conversion, mais retourne **`null`** au lieu de lever une exception si `value` ne correspond à aucun cas.
+- **`from(value)`** : converts the string to the corresponding enum value. Throws **`IllegalArgumentException`** (subclass of `RuntimeException`) if `value` does not match any enum case.
+- **`tryFrom(value)`** : same conversion, but returns **`null`** instead of throwing an exception if `value` does not match any case.
 
 Example:
 
@@ -1365,7 +1365,7 @@ auto sum = (const int[] numbers) => int {
 Anonymous functions can declare exceptions using the `throws` keyword, following the same static exception checking rules as regular methods.
 
 ```nl
-auto riskyOperation = (string input) => throws Exception {
+auto riskyOperation = (string|null input) => throws Exception {
     if (input == null) {
         throw new Exception("Input is null");
     }
@@ -1390,7 +1390,7 @@ Anonymous functions can be assigned to variables with explicit function types. F
 (int, int) => int addFunction = (int a, int b) => a + b;
 
 // Function type with exceptions
-(string) => int throws Exception lengthFunction = (string s) => throws Exception {
+(string|null) => int throws Exception lengthFunction = (string|null s) => throws Exception {
     if (s == null) {
         throw new Exception("String is null");
     }
@@ -1906,6 +1906,7 @@ class Risky
 class readonly MyException extends Exception {
     public int customField;
     public construct(string message, int customField) {
+        super(message);
         this.customField = customField;
     }
 }
@@ -2125,7 +2126,7 @@ namespace com.example.project;
 
 class Calculator {
     public static int main(int argc, string[] args) {
-        if (argc < 3) {
+        if (argc < 4) {
             system.Out.print("Usage: calculator <operation> <a> <b>");
             return 1; // Exit code 1 indicates an error
         }

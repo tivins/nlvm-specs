@@ -127,7 +127,7 @@ Returned by **`system.ps.Process.run()`**. Represents the outcome of a completed
 
 ## Arrays (built-in)
 
-Array types `T[]` are part of the language (see [specs.md](specs.md)#arrays). Creation: `new T[]{ ... }` (initializer list) or `new T[n]` (fixed size). Access by index: `arr[i]` (get/set); out-of-range access throws **IndexOutOfBoundsException**. Built-in methods: **`length()`**, **`slice(int start, int end)`**, **`map((T value) => U f)`**, **`filter((T value) => bool predicate)`**. Arrays are fixed-size; for dynamic add/remove use **system.List&lt;T&gt;** below.
+Array types `T[]` are part of the language (see [specs.md](specs.md)#arrays). Creation: `new T[]{ ... }` (initializer list) or `new T[n]` (fixed size). Access by index: `arr[i]` (get/set); out-of-range access throws **IndexOutOfBoundsException**. Built-in methods: **`length()`**, **`slice(int start, int end)`**, **`map((T value) => U f)`**, **`filter((T value) => bool predicate)`**, **`forEach((T value) => void f)`**, **`sort((T a, T b) => int compare)`**, **`find((T value) => bool predicate)`**. Arrays are fixed-size; for dynamic add/remove use **system.List&lt;T&gt;** below.
 
 ---
 

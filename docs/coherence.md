@@ -101,10 +101,8 @@ Additionally, specs.md contradicts **itself**:
 
 ### III-2. Array built-in methods summary incomplete in stdlib.md
 
-- [ ] **stdlib.md:133** — The summary paragraph lists only `length()`, `slice()`, `map()`, `filter()`.
-  Missing: **`forEach()`**, **`sort()`**, **`find()`**.
-  These three methods are correctly defined in specs.md:245-247 and referenced in vm.md:943-947.
-  The stdlib.md summary must be updated to match.
+- [x] **Resolved (2026-03-02):** stdlib.md § Arrays summary now includes **`forEach()`**, **`sort()`**, **`find()`**
+  to match specs.md and vm.md.
 
 ---
 
@@ -112,35 +110,20 @@ Additionally, specs.md contradicts **itself**:
 
 ### IV-1. `MyException` constructor missing `super(message)`
 
-- [ ] **specs.md:1903-1908** — The custom exception example:
-  ```nl
-  class readonly MyException extends Exception {
-      public int customField;
-      public construct(string message, int customField) {
-          this.customField = customField;
-      }
-  }
-  ```
-  The constructor never calls `super(message)`, so `Exception.message` will not be initialized.
-  Add `super(message);` as the first statement.
+- [x] **Resolved (2026-03-02):** Added `super(message);` as first statement in MyException constructor.
 
 ### IV-2. Entry point example — wrong argc check
 
-- [ ] **specs.md:2100-2107** — The example checks `if (argc < 3)` but then accesses `args[1]`, `args[2]`,
-  and `args[3]`. Since `args[0]` is the program name, 4 elements are needed (argc >= 4).
-  The check should be `if (argc < 4)`.
+- [x] **Resolved (2026-03-02):** Changed `argc < 3` to `argc < 4` in Calculator example.
 
 ### IV-3. Non-nullable parameter compared to null
 
-- [ ] **specs.md:1366-1370** — Anonymous function example: `if (input == null)` where `input` is `string`
-  (non-nullable). The condition is always false. The parameter type should be `string|null input` to make
-  the example meaningful.
-- [ ] **specs.md:1390-1395** — Same issue: `if (s == null)` where `s` is `string`.
+- [x] **Resolved (2026-03-02):** Anonymous function examples: changed parameter types from `string` to
+  `string|null` where the code compares to null (`input` and `s`), so the null check is meaningful.
 
 ### IV-4. Enum descriptions in French
 
-- [ ] **specs.md:1220-1221** — The `from()` / `tryFrom()` descriptions are in French while the rest of
-  specs.md is in English. Translate to English for consistency.
+- [x] **Resolved (2026-03-02):** Translated `from()` / `tryFrom()` descriptions to English.
 
 ---
 
