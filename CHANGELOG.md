@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.7 — 2026-03-03
+
+### Changed
+
+- **Project structure** — Created `review/` folder; moved `archives/` into `review/archives/`; moved `docs/coherence.md` to `review/coherence.md`. Updated README and internal links.
+
 ## 0.8.6 — 2026-03-03
 
 ### Added
@@ -58,7 +64,7 @@
 - **docs/milestones.md** — Milestone 2 summary: error code count 31 → **38** (coherence I-1).
 - **docs/milestones.md** — Milestone 2 scope: corrected error-code groupings — ref rules E020–E022, named/optional E023–E026, entry point E027–E029; added missing categories (inheritance modifiers E032–E036, reserved keywords E030, arrays E031/E038) (coherence I-2).
 - **docs/milestones.md** — Milestone 7: `toUpper`/`toLower` → **`toUpperCase`**/**`toLowerCase`** (coherence VII-5).
-- **archives/coherence_closed_20260303.md** — Wrong year: 2025 → **2026** (coherence VII-1).
+- **review/archives/coherence_closed_20260303.md** — Wrong year: 2025 → **2026** (coherence VII-1).
 - **README.md** — Project structure: `nlvm/` → **`nlvm-specs/`** (coherence VII-2).
 
 ### Added
@@ -77,7 +83,7 @@
 
 ### Changed
 
-- **archives/coherence_closed_20260303.md** — Coherence tracker moved from `docs/coherence.md` to `archives/` and renamed. All items were resolved; document archived for reference.
+- **review/archives/coherence_closed_20260303.md** — Coherence tracker moved from `docs/coherence.md` to `archives/` and renamed. All items were resolved; document archived for reference.
 
 ## 0.8.0 — 2026-03-02
 

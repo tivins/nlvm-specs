@@ -344,7 +344,7 @@ E030 (reserved keywords), E031 (arrays), E032–E036 (abstract/final), E037 (tem
 
 ### VII-1. Archived coherence document — wrong year
 
-- [x] **archives/coherence_closed_20260303.md line 10** says *"All items resolved as of **2025**-03-03."* Should be **2026**-03-03. *(fixed 0.8.3)*
+- [x] **review/archives/coherence_closed_20260303.md line 10** says *"All items resolved as of **2025**-03-03."* Should be **2026**-03-03. *(fixed 0.8.3)*
 
 ### VII-2. README project structure — folder name
 
@@ -370,4 +370,4 @@ E030 (reserved keywords), E031 (arrays), E032–E036 (abstract/final), E037 (tem
 
 ## Previously resolved
 
-See [archives/coherence_closed_20260303.md](../archives/coherence_closed_20260303.md) for the first coherence pass (20 items, all resolved in versions 0.3.1–0.8.1).
+See [archives/coherence_closed_20260303.md](archives/coherence_closed_20260303.md) for the first coherence pass (20 items, all resolved in versions 0.3.1–0.8.1).

@@ -24,7 +24,6 @@ Read **specs.md** first for the language; then **compiler.md** for compile-time 
 
 ```
 nlvm-specs/
-├── archives/         # Archived documents (e.g. coherence_closed_20260303.md)
 ├── docs/
 │   ├── specs.md         # Language specification
 │   ├── compiler.md      # Compiler checks and error codes
@@ -33,7 +32,10 @@ nlvm-specs/
 │   ├── vm.md            # VM and bytecode specification
 │   ├── optimizations.md # Optimization contract (compiler + VM)
 │   └── milestones.md    # Implementation roadmap (9 phases)
-├── tests/            # Example / acceptance test definitions (YAML)
+├── review/
+│   ├── coherence.md     # Coherence tracker (inconsistencies, gaps)
+│   └── archives/        # Archived documents (e.g. coherence_closed_20260303.md)
+├── tests/               # Example / acceptance test definitions (YAML)
 │   └── 00001_class.yaml
 ├── CHANGELOG.md
 └── README.md
