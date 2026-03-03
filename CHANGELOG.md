@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.15 — 2026-03-03
+
+### Added
+
+- **review/architecture/ddd-compatibility.md** — Analyse de compatibilité NL avec les principes Domain-Driven Design (DDD).
+
 ## 0.8.14 — 2026-03-03
 
 ### Changed
