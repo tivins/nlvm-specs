@@ -24,20 +24,9 @@ Read **specs.md** first for the language; then **compiler.md** for compile-time 
 
 ```
 nlvm-specs/
-├── docs/
-│   ├── specs.md         # Language specification
-│   ├── compiler.md      # Compiler checks and error codes
-│   ├── stdlib.md        # Standard library
-│   ├── tests.md         # Test file format (YAML, source blocks)
-│   ├── vm.md            # VM and bytecode specification
-│   ├── optimizations.md # Optimization contract (compiler + VM)
-│   └── milestones.md    # Implementation roadmap (9 phases)
-├── review/
-│   ├── coherence.md     # Coherence tracker (inconsistencies, gaps)
-│   └── archives/        # Archived documents (e.g. coherence_closed_20260303.md)
-├── tests/               # Acceptance tests (YAML, see docs/tests.md § File naming)
-│   ├── m4_0010_minimal_main.yaml
-│   └── m5_0010_class_instantiation.yaml
+├── docs/           # Specs, compiler, stdlib, vm, tests format, milestones, optimizations
+├── review/         # Coherence tracker (coherence.md), archives
+├── tests/          # YAML acceptance tests (see docs/tests.md)
 ├── CHANGELOG.md
 └── README.md
 ```

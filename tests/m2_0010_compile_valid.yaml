@@ -1,0 +1,14 @@
+---
+title: "Compile valid — simple program accepted"
+file_separator: "#NLFILE"
+compile_only: true
+---
+
+#NLFILE compile/valid/Main.nl
+namespace compile.valid;
+class Main {
+	public static int main(string[] args) {
+		int x = 42;
+		return 0;
+	}
+}

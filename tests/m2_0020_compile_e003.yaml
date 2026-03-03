@@ -1,0 +1,14 @@
+---
+title: "Compile E003 — null assigned to non-nullable type"
+file_separator: "#NLFILE"
+expected_compile_error: "E003"
+---
+
+#NLFILE compile/e003/Main.nl
+namespace compile.e003;
+class Main {
+	public static int main(string[] args) {
+		int x = null;
+		return 0;
+	}
+}

@@ -58,6 +58,7 @@ All keys are optional unless stated otherwise. Unknown keys may be ignored by a 
 | `expected_stdout` | string | Exact stdout output expected when running the program. Empty string if no output. |
 | `expected_stderr` | string | *(Optional)* Exact stderr output expected (e.g. for tests that expect compiler or runtime messages). |
 | `compile_only` | boolean | If `true`, the test only checks that the sources compile successfully; no execution and no `main` required. `expected_exit_code` and `expected_stdout` are ignored. |
+| `expected_compile_error` | string | If present, the test expects compilation to **fail** with this error code (e.g. `E003`). Mutually exclusive with `compile_only: true`. The runner compiles the sources and verifies the compiler reports the given error. |
 | `expected_class` | string | Fully qualified class name of the module’s main class (e.g. `test.class.ClassTest`). Checked against the compiled module’s `this_class` (see [vm.md § Module format](vm.md#module-format)). When multiple modules are produced, the runner may check the module corresponding to a given path or the first/entry module; implementation-defined. |
 | `expected_methods` | list of strings | Method names or signatures that must appear in the module’s method table (e.g. `["<construct>", "<destruct>"]`). Names follow VM conventions: constructors `"<construct>"`, destructors `"<destruct>"`. Entries may be simple names or full descriptors (e.g. `"(int, string) -> void"`). |
 | `expected_fields` | list of strings or objects | Field names (and optionally types) that must appear in the module’s field table. Each entry is either a string (field name only) or an object with `name` and optionally `type` (type descriptor string, e.g. `"int"`, `"test.class.ClassTest"`). |
@@ -66,6 +67,8 @@ All keys are optional unless stated otherwise. Unknown keys may be ignored by a 
 For a **run** test (no `compile_only`, or `compile_only: false`), the program must contain exactly one `main` method and the runner will compile all sources, run the program, and compare exit code and stdout (and optionally stderr) to the expected values.
 
 For a **compile-only** test (`compile_only: true`), the runner only verifies that compilation succeeds; useful for testing type-checking or structure without an entry point.
+
+For a **compile-error** test (`expected_compile_error` present), the runner compiles the sources and verifies that the compiler fails with the specified error code (e.g. `E003`). Mutually exclusive with `compile_only: true`.
 
 The keys `expected_class`, `expected_methods`, `expected_fields`, and `expected_constant_pool_contains` are **module-structure checks**: they assert properties of the compiled module (bytecode) produced by the compiler. A runner that supports them must parse the module format (see [vm.md § Module format](vm.md#module-format)) and constant pool / descriptors to verify the expected class name, method table, field table, and constant pool contents. When the test has multiple source files, multiple modules are produced; which module(s) are checked is implementation-defined (e.g. all modules, or only the one for a given path).
 
@@ -126,6 +129,7 @@ The first block is the content of `test/class/ClassTest.nl`, the second is the c
 | Element | Rule |
 |--------|------|
 | File name | `m{N}_{XXXX}_{name}.yaml` — milestone, index (0010, 0020…), descriptive name. |
+| Compile-error test | `expected_compile_error: "E003"` — compiler must fail with given code. |
 | Front matter | YAML between first `---` and second `---`. |
 | Source blocks | Introduced by a line starting with `file_separator` + space + path. |
 | Path | Relative, forward slashes (e.g. `test/class/ClassTest.nl`). |

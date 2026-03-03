@@ -1,0 +1,13 @@
+---
+title: "Parse minimal — namespace, class, main"
+file_separator: "#NLFILE"
+compile_only: true
+---
+
+#NLFILE parse/minimal/Main.nl
+namespace parse.minimal;
+class Main {
+	public static int main(string[] args) {
+		return 0;
+	}
+}

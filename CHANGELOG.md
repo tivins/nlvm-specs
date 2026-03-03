@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.8.11 — 2026-03-03
+
+### Changed
+
+- **README.md** — Simplified project structure: removed per-file listing of docs and tests; kept folder-level overview with pointer to docs/tests.md.
+
+## 0.8.10 — 2026-03-03
+
+### Added
+
+- **tests/m1_0010_parse_minimal.yaml** — Parse minimal (namespace, class, main); compile_only.
+- **tests/m2_0010_compile_valid.yaml** — Compile valid simple program; compile_only.
+- **tests/m2_0020_compile_e003.yaml** — Compile error E003 (null to non-nullable).
+- **tests/m4_0020_arithmetic_int.yaml** — Run test: return 2 + 3 → exit 5.
+- **docs/tests.md** — `expected_compile_error` header key for compile-fail tests.
+
 ## 0.8.9 — 2026-03-03
 
 ### Added

@@ -1,0 +1,14 @@
+---
+title: "Arithmetic int — return 2 + 3"
+file_separator: "#NLFILE"
+expected_exit_code: 5
+expected_stdout: ""
+---
+
+#NLFILE arithmetic/int/Main.nl
+namespace arithmetic.int;
+class Main {
+	public static int main(string[] args) {
+		return 2 + 3;
+	}
+}

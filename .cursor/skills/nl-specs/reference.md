@@ -49,7 +49,8 @@ Pattern: `m{N}_{XXXX}_{name}.yaml` (e.g. `m4_0010_minimal_main.yaml`, `m5_0010_c
 | `file_separator` | Default `#NLFILE` |
 | `expected_exit_code` | Run test |
 | `expected_stdout` | Run test |
-| `compile_only` | Compile-only test |
+| `compile_only` | Compile-only test (expect success) |
+| `expected_compile_error` | Compile-fail test (e.g. `E003`) |
 | `expected_class` | Module structure |
 | `expected_methods` | e.g. `["<construct>", "<destruct>"]` |
 | `expected_fields` | Field names/types |
