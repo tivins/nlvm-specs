@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.18 — 2026-03-04
+
+### Changed
+
+- **README.md** — Added "Evaluate NL for SOLID/DDD" to "Where to start" table; updated project structure to mention architecture analyses (SOLID, DDD) in `review/`.
+
 ## 0.8.17 — 2026-03-03
 
 ### Changed

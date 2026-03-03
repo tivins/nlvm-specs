@@ -27,6 +27,7 @@
 | **Discover NL** | [specs.md](docs/specs.md) → Language highlights below |
 | **Implement a compiler** | [specs.md](docs/specs.md) → [compiler.md](docs/compiler.md) → [milestones.md](docs/milestones.md) |
 | **Implement a VM** | [specs.md](docs/specs.md) → [stdlib.md](docs/stdlib.md) → [vm.md](docs/vm.md) → [milestones.md](docs/milestones.md) |
+| **Evaluate NL for SOLID/DDD** | [solid-compatibility.md](review/architecture/solid-compatibility.md), [ddd-compatibility.md](review/architecture/ddd-compatibility.md) |
 | **Write or run tests** | [tests.md](docs/tests.md) → `tests/` |
 
 ---
@@ -36,7 +37,7 @@
 ```
 nlvm-specs/
 ├── docs/       # All specification documents
-├── review/     # Coherence tracker (coherence.md), archives
+├── review/     # Coherence tracker (coherence.md), architecture analyses (SOLID, DDD), archives
 ├── tests/      # YAML acceptance tests (format in docs/tests.md)
 ├── CHANGELOG.md
 └── README.md
