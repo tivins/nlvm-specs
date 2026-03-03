@@ -21,6 +21,7 @@ complements [specs.md](specs.md) (language semantics) and [stdlib.md](stdlib.md)
 * [Immutability enforcement](#immutability-enforcement)
     * [Const methods](#const-methods)
     * [Const parameters](#const-parameters)
+    * [For-each loop in const context](#for-each-loop-in-const-context)
     * [Readonly classes and properties](#readonly-classes-and-properties)
 * [Exception checking](#exception-checking)
     * [Checked exception propagation](#checked-exception-propagation)
@@ -123,8 +124,7 @@ type is fixed at compile-time and the variable behaves as if it were declared wi
 Rules:
 - `auto` **requires** an initializer. A declaration `auto x;` without assignment is a compile-time error.
 - The deduced type is the static type of the initializer expression.
-- `auto` is valid for local variables, loop variables (`for (const auto item : collection)`), and variable
-  declarations with `new`, function calls, or expressions.
+- `auto` is valid for local variables, loop variables (`for (auto item : collection)` or `for (const auto item : collection)`; see [specs.md § Loops](specs.md#loops)), and variable declarations with `new`, function calls, or expressions.
 
 **Error:** `E005 — Cannot use 'auto' without an initializer`
 
@@ -201,6 +201,17 @@ A parameter declared `const` cannot be reassigned or mutated inside the method b
 `const` methods may be called on the parameter.
 
 **Error:** `E012 — Cannot modify const parameter '%s'`
+
+### For-each loop in const context
+
+When a for-each loop iterates over a collection that is read-only in the current scope, the loop variable is implicitly non-modifiable (see [specs.md § Loops](specs.md#loops)). This applies when:
+
+1. The loop is inside a **const method** and the collection is a property of `this` (e.g. `for (auto item : this.items)`).
+2. The collection is a **const parameter** or **const ref parameter** (e.g. `void f(const int[] arr) { for (auto x : arr) { ... } }`).
+
+In these cases, the compiler must reject any assignment to the loop variable and any call to a non-const method on it.
+
+**Error:** `E039 — Cannot modify loop variable '%s' — implicitly const when iterating over read-only collection`
 
 ### Readonly classes and properties
 
@@ -423,6 +434,7 @@ Non-nullable reference properties have no default and must be initialized — se
 | E010 | Const | Property modification in const method |
 | E011 | Const | Non-const method call in const method |
 | E012 | Const | Modification of const parameter |
+| E039 | Const | Loop variable implicitly const (for-each over read-only collection) |
 | E013 | Readonly | Property modification on readonly class |
 | E014 | Readonly | Modification of readonly property |
 | E015 | Exceptions | Unhandled checked exception |

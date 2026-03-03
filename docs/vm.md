@@ -752,7 +752,7 @@ type.
 
 ### For-each loops
 
-`for (const auto item : collection)` is desugared by the compiler:
+`for (auto item : collection)` and `for (const auto item : collection)` are desugared identically by the compiler. The `const` qualifier affects only compile-time checks (see [specs.md § Loops](specs.md#loops), [compiler.md § For-each loop in const context](compiler.md#for-each-loop-in-const-context)); the bytecode pattern is the same:
 
 - **For arrays (`T[]`)**: the compiler generates an index-based loop:
   ```

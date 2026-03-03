@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.4 — 2026-03-03
+
+### Added
+
+- **docs/specs.md** — § Loops: `const` is **optional** in for-each; both `for (auto item : collection)` and `for (const auto item : collection)` are valid. **Implicit const in const context**: when iterating over `this.property` in a const method, or over a const/const ref parameter, the loop variable is implicitly read-only (deep immutability).
+- **docs/compiler.md** — § For-each loop in const context: E039 — Cannot modify loop variable when iterating over read-only collection.
+
+### Changed
+
+- **docs/compiler.md** — Auto type deduction: loop variables now support both forms (with or without `const`).
+- **docs/vm.md** — § For-each loops: clarified that both forms desugar identically; `const` affects only compile-time checks.
+- **docs/milestones.md** — Immutability enforcement: added E039; error count 38 → 39.
+- **docs/coherence.md** — I-3, III-9, III-10 resolved: for-each const optional, stdlib examples valid.
+
 ## 0.8.3 — 2026-03-03
 
 ### Fixed

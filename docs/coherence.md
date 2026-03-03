@@ -42,11 +42,9 @@ E030 (reserved keywords), E031 (arrays), E032–E036 (abstract/final), E037 (tem
 
 ### I-3. For-each loop — `const` required or optional?
 
-- [ ] **specs.md** only shows the form `for (const auto item : collection)`. **stdlib.md** examples omit `const`:
-  - stdlib.md line 554: `for (auto m : matches)`
-  - stdlib.md line 829: `for (auto p : processes)`
-
-If `const` is mandatory, the stdlib examples are wrong. If optional, specs.md should document both forms with clear semantics for each (mutable vs immutable loop variable).
+- [x] **specs.md** only showed the form `for (const auto item : collection)`. **stdlib.md** examples omitted `const`. *(fixed 0.8.4)*
+  - specs.md § Loops: `const` is **optional**; both `for (auto item : collection)` and `for (const auto item : collection)` are valid.
+  - Added **implicit const in const context**: in a const method, when iterating over `this.property`, or when iterating over a const parameter, the loop variable is implicitly read-only (E039).
 
 ### I-4. `system.Env` listed as a namespace
 
@@ -214,11 +212,11 @@ If `const` is mandatory, the stdlib examples are wrong. If optional, specs.md sh
 
 ### III-9. Grep example — missing `const` in for-each
 
-- [ ] **stdlib.md line 554:** `for (auto m : matches)` — if `const` is required before `auto` in for-each (as defined in specs.md), this example is incorrect.
+- [x] **stdlib.md line 567:** `for (auto m : matches)` — `const` is optional in for-each (specs.md § Loops); the example is valid. *(resolved with I-3)*
 
 ### III-10. Process example — missing `const` in for-each
 
-- [ ] **stdlib.md line 829:** `for (auto p : processes)` — same issue as III-9.
+- [x] **stdlib.md line 842:** `for (auto p : processes)` — same as III-9; valid. *(resolved with I-3)*
 
 ### III-11. `system.io.Path.join` example — wrong array syntax
 

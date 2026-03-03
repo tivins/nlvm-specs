@@ -474,10 +474,12 @@ auto vector = new Vector<int>(1, 2, 3); // deduced as Vector<int>
 // With arrays
 auto numbers = new int[]{1, 2, 3, 4, 5}; // deduced as int[]
 
-// In loops
+// In loops (const optional; see § Loops for semantics)
 for (const auto item : collection) {
-    // item type is deduced from collection element type
     system.Out.print(item);
+}
+for (auto item : collection) {
+    // mutable loop variable
 }
 
 // With complex expressions
@@ -1479,7 +1481,23 @@ for (init; condition; increment) {
 for (const auto item : collection) {
     // item type is deduced from collection element type
 }
+
+for (auto item : collection) {
+    // item is mutable; use when the loop body needs to modify the loop variable
+}
 ```
+
+**For-each loop — `const` optional.** Both forms are valid:
+
+- `for (const auto item : collection)` — the loop variable is read-only; assignments to `item` and calls to non-const methods on `item` are rejected.
+- `for (auto item : collection)` — the loop variable is mutable; the loop body may modify it (when the element type permits).
+
+**Implicit const in const context.** When iterating over a collection that is read-only in the current scope, the loop variable is implicitly non-modifiable (as if `const auto` had been written). This applies when:
+
+1. The loop appears inside a **const method** and the collection is a property of `this` (e.g. `for (auto item : this.items)`).
+2. The collection is a **const parameter** or **const ref parameter** (e.g. `void f(const int[] arr) { for (auto x : arr) { ... } }`).
+
+In these cases, the compiler treats the loop variable as read-only and rejects any modification. This ensures deep immutability: a const method cannot mutate the object's logical state, including elements of its collections.
 
 ### Switch/Match
 

@@ -11,7 +11,7 @@ This document describes the recommended phases for building a complete NL toolch
 | # | Milestone | Deliverable | Key references |
 |---|-----------|-------------|----------------|
 | 1 | [Lexer & Parser](#milestone-1--lexer--parser) | AST for all NL syntax | specs.md |
-| 2 | [Semantic analysis](#milestone-2--semantic-analysis) | Error diagnostics (38 error codes, 1 warning) | compiler.md, specs.md |
+| 2 | [Semantic analysis](#milestone-2--semantic-analysis) | Error diagnostics (39 error codes, 1 warning) | compiler.md, specs.md |
 | 3 | [Bytecode emission](#milestone-3--bytecode-emission) | Valid `.nlm` modules | vm.md §§ Module format, Compilation strategies; compiler.md § [Compiler invocation (nlc)](compiler.md#compiler-invocation-nlc) |
 | 4 | [VM core](#milestone-4--vm-core) | Execute primitive programs | vm.md §§ Architecture, Value representation, Instruction set, Program startup, [VM invocation (nlvm)](vm.md#vm-invocation-nlvm) |
 | 5 | [Objects, arrays & dispatch](#milestone-5--objects-arrays--dispatch) | OOP programs run | vm.md §§ Object model, Method dispatch |
@@ -63,7 +63,7 @@ Implement all compile-time checks defined in compiler.md. This milestone require
 - **Definite assignment analysis** — [compiler.md § Definite assignment](compiler.md#definite-assignment-analysis): E001, E002.
 - **Null safety** — [compiler.md § Null safety](compiler.md#null-safety): E003, E004.
 - **Type checking** — [compiler.md § Type checking](compiler.md#type-checking): `auto` (E005), templates (E006, E037), casts (E007), string concatenation (E008), operator compatibility (E009).
-- **Immutability enforcement** — [compiler.md § Immutability](compiler.md#immutability-enforcement): `const` methods (E010, E011), `const` parameters (E012), `readonly` (E013, E014).
+- **Immutability enforcement** — [compiler.md § Immutability](compiler.md#immutability-enforcement): `const` methods (E010, E011), `const` parameters (E012), for-each in const context (E039), `readonly` (E013, E014).
 - **Exception checking** — [compiler.md § Exception checking](compiler.md#exception-checking): checked propagation (E015), inheritance rules (E016, E017).
 - **Visibility enforcement** — [compiler.md § Visibility](compiler.md#visibility-enforcement): E018, E019.
 - **Parameter validation** — [compiler.md § Parameter validation](compiler.md#parameter-validation): `ref` rules (E020–E022), named/optional rules (E023–E026).
@@ -234,7 +234,7 @@ Build the test runner that executes the YAML test suite, and validate the full t
 - **Compile-only tests** (`compile_only: true`): compile and verify success, no execution.
 - **Module-structure assertions:** parse the compiled module and verify `expected_class`, `expected_methods`, `expected_fields`, `expected_constant_pool_contains`.
 - **Test discovery:** scan `tests/` directory, run all `*.yaml` files, report pass/fail summary.
-- **Error tests (extension):** tests that verify the compiler correctly rejects invalid programs with specific error codes (E001–E038, W001). Requires extending the test format or adding a convention (e.g. `expected_error: "E003"` header key).
+- **Error tests (extension):** tests that verify the compiler correctly rejects invalid programs with specific error codes (E001–E039, W001). Requires extending the test format or adding a convention (e.g. `expected_error: "E003"` header key).
 
 ### Testable at this stage
 
