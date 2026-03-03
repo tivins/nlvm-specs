@@ -18,6 +18,7 @@ This document describes the recommended phases for building a complete NL toolch
 | 6 | [Exceptions & closures](#milestone-6--exceptions--closures) | Full control flow | vm.md §§ Exception handling, Closures |
 | 7 | [Standard library](#milestone-7--standard-library) | Native bindings for `system.*` | stdlib.md, vm.md § Standard library binding |
 | 8 | [Test runner & integration](#milestone-8--test-runner--integration) | All `tests/` YAML files pass | tests.md |
+| 9 | [Optimizations](#milestone-9--optimizations) | Optional compiler and VM optimizations | optimizations.md |
 
 ---
 
@@ -243,6 +244,29 @@ Build the test runner that executes the YAML test suite, and validate the full t
 
 ---
 
+## Milestone 9 — Optimizations
+
+Implement optional compiler and VM optimizations as defined in [optimizations.md](optimizations.md). This milestone is
+**optional** and can be pursued after the core toolchain is stable.
+
+### Scope
+
+- **Compiler optimizations** — [optimizations.md § Compiler optimizations](optimizations.md#compiler-optimizations):
+  constant folding, constant propagation, dead code elimination, devirtualization, inlining, tail call optimization,
+  string literal concatenation.
+- **VM optimizations** — [optimizations.md § VM optimizations](optimizations.md#vm-optimizations): string interning,
+  JIT compilation, superinstructions, inline caching, GC tuning.
+- **Prohibited transformations** — [optimizations.md § Prohibited transformations](optimizations.md#prohibited-transformations):
+  ensure no reordering of side effects, no elimination of observable calls, no fusion that changes semantics.
+
+### Testable at this stage
+
+- **Regression tests:** run all `tests/` programs with and without optimizations; compare outputs, exit codes, and
+  exception behavior. All tests must pass regardless of optimization level.
+- **Performance benchmarks:** optional; compare execution time or memory usage with/without optimizations.
+
+---
+
 ## Dependency graph
 
 ```
@@ -268,6 +292,9 @@ Build the test runner that executes the YAML test suite, and validate the full t
        │
        ▼
 8. Test Runner (run tests available here)
+       │
+       ▼
+9. Optimizations (optional)
 ```
 
-Milestones 1–3 are the **compiler** track. Milestones 4–7 are the **VM** track. Milestone 8 ties everything together. Module-structure tests (milestone 3 deliverables) can be validated by a partial test runner as early as milestone 3; full run tests require milestone 7.
+Milestones 1–3 are the **compiler** track. Milestones 4–7 are the **VM** track. Milestone 8 ties everything together. Milestone 9 (optimizations) is optional and builds on the complete toolchain. Module-structure tests (milestone 3 deliverables) can be validated by a partial test runner as early as milestone 3; full run tests require milestone 7.

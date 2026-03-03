@@ -72,6 +72,8 @@ the compiler verifies*; this document defines *how* compiled code is represented
 * [Garbage collection contract](#garbage-collection-contract)
 * [Object lifecycle](#object-lifecycle)
 
+For optimization-related guarantees (string interning, devirtualization, JIT, etc.), see [optimizations.md](optimizations.md).
+
 ---
 
 ## Architecture overview
@@ -331,7 +333,7 @@ Strings are immutable heap objects. Internally a string stores:
 
 String interning: the VM **may** intern string literals from the constant pool so that identical literals share
 the same object. Interning is an optimization; correctness must not depend on it (string equality is always
-by content, never by reference identity).
+by content, never by reference identity). See [optimizations.md § VM optimizations](optimizations.md#vm-optimizations).
 
 ### Enum representation
 
@@ -552,7 +554,7 @@ The vtable is an array of method pointers, one per non-static, non-private metho
 another, it inherits the parent's vtable entries and overrides slots for methods it redefines. The vtable
 index for each method is determined at class load time.
 
-All non-static, non-private instance methods participate in virtual dispatch by default (see [specs.md § Virtual method dispatch](specs.md#virtual-method-dispatch)). Abstract methods have no implementation in the declaring class; concrete subclasses provide the implementation. Final methods cannot be overridden; the compiler may optimize calls to final methods by bypassing the vtable when the receiver's static type is known.
+All non-static, non-private instance methods participate in virtual dispatch by default (see [specs.md § Virtual method dispatch](specs.md#virtual-method-dispatch)). Abstract methods have no implementation in the declaring class; concrete subclasses provide the implementation. Final methods cannot be overridden; the compiler may optimize calls to final methods by bypassing the vtable when the receiver's static type is known (see [optimizations.md § Compiler optimizations](optimizations.md#compiler-optimizations)).
 
 ### Constructors
 

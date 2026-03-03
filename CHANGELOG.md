@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.8.6 — 2026-03-03
+
+### Added
+
+- **docs/optimizations.md** — Optimization contract: principles (semantics preservation, side-effect ordering), compiler optimizations (constant folding, dead code elimination, devirtualization, inlining, tail call, string literal concatenation), VM optimizations (string interning, JIT, superinstructions, inline caching, GC tuning), prohibited transformations, and observability definition.
+- **docs/compiler.md** — § Optimizations: link to optimizations.md.
+- **docs/vm.md** — Links to optimizations.md from string interning and devirtualization sections.
+- **docs/milestones.md** — Milestone 9: Optimizations (optional phase after test runner).
+- **README.md** — Added optimizations.md to documentation table and project structure.
+
+### Changed
+
+- **docs/vm.md** — Summary: added note pointing to optimizations.md for optimization-related guarantees.
+- **docs/coherence.md** — Added optimizations.md to the list of tracked specification documents.
+
 ## 0.8.5 — 2026-03-03
 
 ### Changed

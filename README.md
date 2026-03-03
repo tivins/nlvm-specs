@@ -15,6 +15,7 @@ This repository holds the **complete specification** of NL: language semantics, 
 | **[docs/vm.md](docs/vm.md)**                 | **Virtual machine specification.** Stack-based execution model, value representation, binary module format (constant pool, class/field/method descriptors), object/array/string layout, instruction set (~50 opcodes), method dispatch (vtables), exception handling (tables, unwinding, stack trace), closures, compilation strategies (templates, ref params, switch/match, etc.), program startup, stdlib binding, threading, and GC contract. Defines *how* compiled code is represented and executed. § [VM invocation (nlvm)](docs/vm.md#vm-invocation-nlvm) defines the VM CLI. |
 | **[docs/tests.md](docs/tests.md)**           | **Test format.** Structure of test files in `tests/` (YAML front matter, header keys, source blocks with `#NLFILE`-style separators, run vs compile-only). For use by a future compiler/tooling.                                                                                                                                                                                                                                                                                                                                                                                       |
 | **[docs/milestones.md](docs/milestones.md)** | **Implementation milestones.** Recommended phases for building the compiler, VM, and test runner — from lexer/parser to full integration. Each milestone lists its scope, spec references, and what becomes testable.                                                                                                                                                                                                                                                                                                                                                                  |
+| **[docs/optimizations.md](docs/optimizations.md)** | **Optimization contract.** Principles, compiler optimizations (constant folding, devirtualization, etc.), VM optimizations (string interning, JIT, etc.), and prohibited transformations. Defines what implementations *may* optimize while preserving observable semantics.                                                                                                                                                                                                                                                                                                          |
 
 
 Read **specs.md** first for the language; then **compiler.md** for compile-time rules, **stdlib.md** for the runtime API, **vm.md** for implementing an interpreter or code generator, and **milestones.md** for a suggested implementation roadmap.
@@ -25,12 +26,13 @@ Read **specs.md** first for the language; then **compiler.md** for compile-time 
 nlvm-specs/
 ├── archives/         # Archived documents (e.g. coherence_closed_20260303.md)
 ├── docs/
-│   ├── specs.md      # Language specification
-│   ├── compiler.md   # Compiler checks and error codes
-│   ├── stdlib.md     # Standard library
-│   ├── tests.md      # Test file format (YAML, source blocks)
-│   ├── vm.md         # VM and bytecode specification
-│   └── milestones.md # Implementation roadmap (8 phases)
+│   ├── specs.md         # Language specification
+│   ├── compiler.md      # Compiler checks and error codes
+│   ├── stdlib.md        # Standard library
+│   ├── tests.md         # Test file format (YAML, source blocks)
+│   ├── vm.md            # VM and bytecode specification
+│   ├── optimizations.md # Optimization contract (compiler + VM)
+│   └── milestones.md    # Implementation roadmap (9 phases)
 ├── tests/            # Example / acceptance test definitions (YAML)
 │   └── 00001_class.yaml
 ├── CHANGELOG.md

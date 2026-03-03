@@ -1,7 +1,7 @@
 # NL Specification — Coherence Tracker
 
 This document lists all known inconsistencies, errors, omissions, and gaps across the NL specification
-documents (`specs.md`, `stdlib.md`, `compiler.md`, `vm.md`, `milestones.md`, `tests.md`, `README.md`).
+documents (`specs.md`, `stdlib.md`, `compiler.md`, `vm.md`, `optimizations.md`, `milestones.md`, `tests.md`, `README.md`).
 Each item has a checkbox to track resolution.
 
 Audit performed on **2026-03-03**, against spec version **0.8.1**.

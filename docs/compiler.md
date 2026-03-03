@@ -37,6 +37,7 @@ complements [specs.md](specs.md) (language semantics) and [stdlib.md](stdlib.md)
 * [Reserved keywords](#reserved-keywords)
 * [Default values](#default-values)
     * [Multidimensional array creation](#multidimensional-array-creation)
+* [Optimizations](#optimizations)
 * [Compiler invocation (nlc)](#compiler-invocation-nlc)
 
 ---
@@ -461,6 +462,14 @@ Non-nullable reference properties have no default and must be initialized — se
 | E035 | Abstract/Final | Cannot extend final class |
 | E036 | Abstract/Final | Cannot override final method |
 | W001 | Warning | Nodiscard return value discarded |
+
+---
+
+## Optimizations
+
+The compiler **may** apply optional optimizations such as constant folding, dead code elimination, devirtualization,
+and inlining. All optimizations must preserve observable semantics. See [optimizations.md](optimizations.md) for the
+full optimization contract (compiler and VM).
 
 ---
 
