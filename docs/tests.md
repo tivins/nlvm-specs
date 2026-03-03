@@ -2,6 +2,20 @@
 
 This document describes the format of acceptance tests for the NL language and toolchain. Tests live in the `tests/` directory as YAML files and are intended for use by a compiler, VM, or test runner. The repository does not include a test runner implementation.
 
+## File naming
+
+Test files follow the pattern `m{N}_{XXXX}_{name}.yaml`:
+
+| Part | Meaning | Example |
+|------|---------|---------|
+| `m{N}` | Milestone number (1–9) from [milestones.md](milestones.md) | `m4` = VM core |
+| `{XXXX}` | 4-digit index with spacing (e.g. 0010, 0020, 0030) | Allows insertion without renumbering |
+| `{name}` | Descriptive name (lowercase, underscores) | `minimal_main`, `class_instantiation` |
+
+**Examples:** `m4_0010_minimal_main.yaml`, `m5_0010_class_instantiation.yaml`, `m2_0010_compile_e003.yaml`
+
+The index is scoped per milestone: `m1_0010` and `m2_0010` are distinct tests. Use gaps of 10 (0010, 0020, 0030…) to allow inserting new tests (e.g. 0015) without renumbering.
+
 ## File structure
 
 Each test file has two parts:
@@ -111,6 +125,7 @@ The first block is the content of `test/class/ClassTest.nl`, the second is the c
 
 | Element | Rule |
 |--------|------|
+| File name | `m{N}_{XXXX}_{name}.yaml` — milestone, index (0010, 0020…), descriptive name. |
 | Front matter | YAML between first `---` and second `---`. |
 | Source blocks | Introduced by a line starting with `file_separator` + space + path. |
 | Path | Relative, forward slashes (e.g. `test/class/ClassTest.nl`). |

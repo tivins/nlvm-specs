@@ -1,10 +1,8 @@
 ---
-# Test format described in docs/tests.md
 title: "Class parsing, instantiation, typing and auto"
 file_separator: "#NLFILE"
 expected_exit_code: 0
 expected_stdout: ""
-# Optional: module-structure checks for the ClassTest module (test/class/ClassTest.nl)
 expected_class: "test.class.ClassTest"
 expected_methods: ["<construct>", "<destruct>"]
 ---

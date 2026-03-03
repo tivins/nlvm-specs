@@ -37,6 +37,10 @@ review/coherence.md (cross-doc consistency)
 - Categories: Cross-document inconsistencies, Language omissions, Incorrect examples, VM/compiler gaps, Stdlib issues, Under-specified semantics, Editorial errors
 - Format: `- [ ]` or `- [x]` with `*(fixed X.Y.Z)*` when resolved
 
+## Test file naming
+
+Pattern: `m{N}_{XXXX}_{name}.yaml` (e.g. `m4_0010_minimal_main.yaml`, `m5_0010_class_instantiation.yaml`). See docs/tests.md § File naming.
+
 ## Test YAML keys
 
 | Key | Use |

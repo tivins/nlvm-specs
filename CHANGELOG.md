@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.9 — 2026-03-03
+
+### Added
+
+- **docs/tests.md** — § File naming: pattern `m{N}_{XXXX}_{name}.yaml` (milestone, index with spacing, descriptive name).
+- **tests/m4_0010_minimal_main.yaml** — First run test: entry point only, main returns 0 (Milestone 4).
+
+### Changed
+
+- **tests/** — Renamed `00001_class.yaml` to `m5_0010_class_instantiation.yaml`; updated README project structure.
+
 ## 0.8.8 — 2026-03-03
 
 ### Added

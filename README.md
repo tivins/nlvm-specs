@@ -35,8 +35,9 @@ nlvm-specs/
 ├── review/
 │   ├── coherence.md     # Coherence tracker (inconsistencies, gaps)
 │   └── archives/        # Archived documents (e.g. coherence_closed_20260303.md)
-├── tests/               # Example / acceptance test definitions (YAML)
-│   └── 00001_class.yaml
+├── tests/               # Acceptance tests (YAML, see docs/tests.md § File naming)
+│   ├── m4_0010_minimal_main.yaml
+│   └── m5_0010_class_instantiation.yaml
 ├── CHANGELOG.md
 └── README.md
 ```
