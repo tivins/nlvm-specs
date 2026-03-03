@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.8 — 2026-03-03
+
+### Added
+
+- **.cursor/skills/nl-specs/** — Cursor skill for NL specification workflows: writing/editing specs, coherence checks (review/coherence.md), YAML test creation, cross-document consistency. Includes SKILL.md and reference.md.
+
 ## 0.8.7 — 2026-03-03
 
 ### Changed
