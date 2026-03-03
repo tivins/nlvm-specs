@@ -6,19 +6,37 @@ This repository holds the **complete specification** of NL: language semantics, 
 
 ## Documentation
 
+Read [specs.md](docs/specs.md) first for the language; then [compiler.md](docs/compiler.md) for compile-time rules, [stdlib.md](docs/stdlib.md) for the runtime API, [vm.md](docs/vm.md) for implementing an interpreter or code generator, and [milestones.md](docs/milestones.md) for a suggested implementation roadmap.
 
-| Document                                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **[docs/specs.md](docs/specs.md)**           | **Language specification.** Lexical rules, types, classes, enums, control flow, operators, operator overloading, anonymous functions, exceptions, and entry point. Defines *what* the language allows.                                                                                                                                                                                                                                                                                                                                                                                 |
-| **[docs/compiler.md](docs/compiler.md)**     | **Compiler semantic analyses.** Definite assignment, null safety, type checking, immutability (`const` / `readonly`), exception checking, visibility, parameter validation, entry-point validation. Defines *what* the compiler must verify and reject (39 error codes, 1 warning). § [Compiler invocation (nlc)](docs/compiler.md#compiler-invocation-nlc) defines the compiler CLI.                                                                                                                                                                                                  |
-| **[docs/stdlib.md](docs/stdlib.md)**         | **Standard library API.** System namespaces (`system`, `system.io`, `system.net`, `system.thread`, `system.time`, etc.): streams, parsing, files, directories, network (TCP/UDP/HTTP), threads, mutex/semaphore, date/time, `system.Env`, `system.ps.Process`, regex, encoding. Defines the contract between user code and the runtime.                                                                                                                                                                                                                                                |
-| **[docs/vm.md](docs/vm.md)**                 | **Virtual machine specification.** Stack-based execution model, value representation, binary module format (constant pool, class/field/method descriptors), object/array/string layout, instruction set (~50 opcodes), method dispatch (vtables), exception handling (tables, unwinding, stack trace), closures, compilation strategies (templates, ref params, switch/match, etc.), program startup, stdlib binding, threading, and GC contract. Defines *how* compiled code is represented and executed. § [VM invocation (nlvm)](docs/vm.md#vm-invocation-nlvm) defines the VM CLI. |
-| **[docs/tests.md](docs/tests.md)**           | **Test format.** Structure of test files in `tests/` (YAML front matter, header keys, source blocks with `#NLFILE`-style separators, run vs compile-only). For use by a future compiler/tooling.                                                                                                                                                                                                                                                                                                                                                                                       |
-| **[docs/milestones.md](docs/milestones.md)** | **Implementation milestones.** Recommended phases for building the compiler, VM, and test runner — from lexer/parser to full integration. Each milestone lists its scope, spec references, and what becomes testable.                                                                                                                                                                                                                                                                                                                                                                  |
-| **[docs/optimizations.md](docs/optimizations.md)** | **Optimization contract.** Principles, compiler optimizations (constant folding, devirtualization, etc.), VM optimizations (string interning, JIT, etc.), and prohibited transformations. Defines what implementations *may* optimize while preserving observable semantics.                                                                                                                                                                                                                                                                                                          |
+### **Language specification** - **[docs/specs.md](docs/specs.md)**
 
+Lexical rules, types, classes, enums, control flow, operators, operator overloading, anonymous functions, exceptions, and entry point. Defines *what* the language allows.
 
-Read **specs.md** first for the language; then **compiler.md** for compile-time rules, **stdlib.md** for the runtime API, **vm.md** for implementing an interpreter or code generator, and **milestones.md** for a suggested implementation roadmap.
+### **Compiler semantic analyses.** - **[docs/compiler.md](docs/compiler.md)**
+
+Definite assignment, null safety, type checking, immutability (`const` / `readonly`), exception checking, visibility, parameter validation, entry-point validation. Defines *what* the compiler must verify and reject (39 error codes, 1 warning). § [Compiler invocation (nlc)](docs/compiler.md#compiler-invocation-nlc) defines the compiler CLI.
+
+### **Standard library API.** - **[docs/stdlib.md](docs/stdlib.md)**
+
+System namespaces (`system`, `system.io`, `system.net`, `system.thread`, `system.time`, etc.): streams, parsing, files, directories, network (TCP/UDP/HTTP), threads, mutex/semaphore, date/time, `system.Env`, `system.ps.Process`, regex, encoding. Defines the contract between user code and the runtime.
+
+### **Virtual machine specification.** - **[docs/vm.md](docs/vm.md)**
+
+Stack-based execution model, value representation, binary module format (constant pool, class/field/method descriptors), object/array/string layout, instruction set (~50 opcodes), method dispatch (vtables), exception handling (tables, unwinding, stack trace), closures, compilation strategies (templates, ref params, switch/match, etc.), program startup, stdlib binding, threading, and GC contract. Defines *how* compiled code is represented and executed. § [VM invocation (nlvm)](docs/vm.md#vm-invocation-nlvm) defines the VM CLI.
+
+---
+
+### **Test format.** - **[docs/tests.md](docs/tests.md)**
+
+Structure of test files in `tests/` (YAML front matter, header keys, source blocks with `#NLFILE`-style separators, run vs compile-only). For use by a future compiler/tooling.
+
+### **Implementation milestones.** - **[docs/milestones.md](docs/milestones.md)**
+
+Recommended phases for building the compiler, VM, and test runner — from lexer/parser to full integration. Each milestone lists its scope, spec references, and what becomes testable.
+
+### **Optimization contract.** - **[docs/optimizations.md](docs/optimizations.md)**
+
+Principles, compiler optimizations (constant folding, devirtualization, etc.), VM optimizations (string interning, JIT, etc.), and prohibited transformations. Defines what implementations *may* optimize while preserving observable semantics.
 
 ## Project structure
 

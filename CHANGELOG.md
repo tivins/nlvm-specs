@@ -4,7 +4,7 @@
 
 ### Changed
 
-- **README.md** — Simplified project structure: removed per-file listing of docs and tests; kept folder-level overview with pointer to docs/tests.md.
+- **README.md** — Simplified project structure: removed per-file listing of docs and tests; kept folder-level overview with pointer to docs/tests.md. Moved reading-order paragraph above the doc list, converted doc names to links, removed bold.
 
 ## 0.8.10 — 2026-03-03
 
