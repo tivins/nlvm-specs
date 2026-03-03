@@ -1,43 +1,43 @@
-# NL et Domain-Driven Design — Analyse de compatibilité
+# NL and Domain-Driven Design — Compatibility Analysis
 
-Ce document analyse si les projets utilisant NLVM peuvent respecter les principes du Domain-Driven Design (DDD). Il s'appuie sur les spécifications du langage NL (specs.md, compiler.md, stdlib.md, vm.md) et le suivi de cohérence (review/coherence.md).
-
----
-
-## Verdict global
-
-**Oui, les projets NLVM peuvent respecter les principes DDD.** Le langage NL fournit les briques essentielles. Certains aspects nécessitent des conventions ou des patterns à implémenter manuellement.
+This document analyzes whether projects using NLVM can adhere to Domain-Driven Design (DDD) principles. It is based on the NL language specifications (specs.md, compiler.md, stdlib.md, vm.md) and coherence tracking (review/coherence.md).
 
 ---
 
-## Points forts pour DDD
+## Overall Verdict
 
-| Principe DDD | Support NL | Détails |
-|--------------|------------|---------|
-| **Value Objects** | Très bon | `readonly` (classe ou propriété), `ValueEquatable`, `const` méthodes/paramètres. Immutabilité et égalité structurelle bien supportées. |
-| **Entities** | Bon | Classes avec identité (référence), constructeurs, encapsulation via `private`/`protected`. |
-| **Aggregates** | Bon | Encapsulation, invariants dans les constructeurs. Pas de notion native d'« aggregate root », mais c'est un pattern, pas une contrainte du langage. |
-| **Domain Services** | Bon | Classes stateless ou méthodes `static`. |
-| **Repositories** | Bon | Interfaces pour abstraire la persistance. Ex. : `interface IOrderRepository { Order|null findById(int id); void save(Order o); }`. |
-| **Bounded Contexts** | Bon | Namespaces alignés avec la hiérarchie de fichiers (`namespace com.example.order.domain`). Un fichier = une classe. |
-| **Ubiquitous Language** | Bon | `typedef` pour types du domaine, nommage explicite. |
-| **Infrastructure isolation** | Bon | Le domaine dépend d'interfaces ; l'infrastructure les implémente. |
-| **Application Services** | Bon | Classes qui orchestrent les use cases. |
+**Yes, NLVM projects can adhere to DDD principles.** The NL language provides the essential building blocks. Some aspects require conventions or patterns to be implemented manually.
 
 ---
 
-## Points à gérer par convention ou implémentation
+## Strengths for DDD
 
-| Aspect | Situation | Recommandation |
+| DDD Principle | NL Support | Details |
+|---------------|------------|---------|
+| **Value Objects** | Very good | `readonly` (class or property), `ValueEquatable`, `const` methods/parameters. Immutability and structural equality well supported. |
+| **Entities** | Good | Classes with identity (reference), constructors, encapsulation via `private`/`protected`. |
+| **Aggregates** | Good | Encapsulation, invariants in constructors. No native notion of "aggregate root", but it is a pattern, not a language constraint. |
+| **Domain Services** | Good | Stateless classes or `static` methods. |
+| **Repositories** | Good | Interfaces to abstract persistence. E.g.: `interface IOrderRepository { Order|null findById(int id); void save(Order o); }`. |
+| **Bounded Contexts** | Good | Namespaces aligned with folder hierarchy (`namespace com.example.order.domain`). One file = one class. |
+| **Ubiquitous Language** | Good | `typedef` for domain types, explicit naming. |
+| **Infrastructure isolation** | Good | The domain depends on interfaces; infrastructure implements them. |
+| **Application Services** | Good | Classes that orchestrate use cases. |
+
+---
+
+## Aspects to Handle by Convention or Implementation
+
+| Aspect | Situation | Recommendation |
 |--------|-----------|----------------|
-| **Dependency Injection** | Pas de DI intégré | Injection manuelle via constructeurs. Un point d'entrée (composition root) construit les dépendances et les passe aux services. |
-| **Domain Events** | Pas de mécanisme dédié | Implémenter un bus d'événements simple (liste d'abonnés, dispatch synchrone) ou un pattern similaire. |
-| **Interfaces multiples** | VM supporte plusieurs interfaces, la syntaxe n'est pas clairement documentée | Cohérence mentionnée dans review/coherence.md (II-7). En pratique, une syntaxe du type `implements A, B, C` est probable. |
-| **Contrôle d'accès entre modules** | Pas de notion de module avec visibilité | Organiser par namespaces et conventions (ex. `domain` ne dépend pas de `infrastructure`). |
+| **Dependency Injection** | No built-in DI | Manual injection via constructors. An entry point (composition root) builds dependencies and passes them to services. |
+| **Domain Events** | No dedicated mechanism | Implement a simple event bus (subscriber list, synchronous dispatch) or a similar pattern. |
+| **Multiple interfaces** | VM supports multiple interfaces, syntax not clearly documented | Coherence mentioned in review/coherence.md (II-7). In practice, syntax like `implements A, B, C` is likely. |
+| **Access control between modules** | No notion of module with visibility | Organize by namespaces and conventions (e.g. `domain` does not depend on `infrastructure`). |
 
 ---
 
-## Exemple de structure DDD en NL
+## Example DDD Structure in NL
 
 ```nl
 // domain/Order.nl — Entity
@@ -76,87 +76,87 @@ class FileOrderRepository implements IOrderRepository { ... }
 
 ---
 
-## Synthèse
+## Summary
 
-| Critère | Note | Commentaire |
-|---------|------|-------------|
-| Modélisation du domaine | 9/10 | Value objects, entities, enums, interfaces. |
-| Séparation des couches | 8/10 | Interfaces + namespaces suffisants. |
-| Inversion de dépendances | 7/10 | Possible via constructeurs, sans framework. |
-| Bounded contexts | 8/10 | Namespaces adaptés. |
-| Événements de domaine | 5/10 | À implémenter manuellement. |
+| Criterion | Score | Comment |
+|-----------|-------|---------|
+| Domain modeling | 9/10 | Value objects, entities, enums, interfaces. |
+| Layer separation | 8/10 | Interfaces + namespaces sufficient. |
+| Dependency inversion | 7/10 | Possible via constructors, without framework. |
+| Bounded contexts | 8/10 | Namespaces suitable. |
+| Domain events | 5/10 | To be implemented manually. |
 
 ---
 
 ## Conclusion
 
-NL est adapté à DDD. Les projets devront définir des conventions (couches, composition root, éventuellement un bus d'événements léger), mais le langage offre les bases nécessaires. L'absence de DI intégré n'est pas bloquante : l'injection par constructeur manuelle est une approche courante en DDD.
+NL is suited for DDD. Projects will need to define conventions (layers, composition root, possibly a lightweight event bus), but the language offers the necessary foundations. The absence of built-in DI is not blocking: manual constructor injection is a common approach in DDD.
 
 <hr>
 
-## Explication détaillée
+## Detailed Explanation
 
 ### Value Objects
 
-En DDD, un Value Object est défini par ses attributs, non par une identité. Deux Value Objects avec les mêmes valeurs sont interchangeables. NL supporte ce pattern de plusieurs façons :
+In DDD, a Value Object is defined by its attributes, not by an identity. Two Value Objects with the same values are interchangeable. NL supports this pattern in several ways:
 
-- **`readonly` sur une classe** : toutes les propriétés deviennent immuables après construction. Aucune modification n'est possible une fois l'objet créé.
-- **`readonly` sur une propriété** : seule cette propriété est figée après le constructeur.
-- **`ValueEquatable`** : l'interface impose `valueEquals(const Self|null other)` et `valueHash()`. L'égalité structurelle (mêmes valeurs) remplace l'égalité par référence. Idéal pour les clés de `system.Map` basées sur la valeur.
-- **`const`** : sur les méthodes (pas de mutation de l'objet) et les paramètres (pas de modification du paramètre). Permet de garantir qu'un Value Object passé en argument ne sera pas altéré.
+- **`readonly` on a class:** all properties become immutable after construction. No modification is possible once the object is created.
+- **`readonly` on a property:** only that property is frozen after the constructor.
+- **`ValueEquatable`:** the interface requires `valueEquals(const Self|null other)` and `valueHash()`. Structural equality (same values) replaces reference equality. Ideal for `system.Map` keys based on value.
+- **`const`:** on methods (no mutation of the object) and parameters (no modification of the parameter). Ensures that a Value Object passed as an argument will not be altered.
 
-Les enums typés (`enum OrderStatus : string`) constituent aussi des Value Objects légers pour des ensembles fermés de valeurs.
+Typed enums (`enum OrderStatus : string`) also constitute lightweight Value Objects for closed sets of values.
 
-### Entities et identité
+### Entities and Identity
 
-Une Entity en DDD possède une identité stable qui la distingue des autres, même si ses attributs changent. En NL, les instances de classe ont une identité par référence : `a == b` compare les références, pas les valeurs. L'Entity conserve donc naturellement son identité à travers les mutations. L'encapsulation (`private`, `protected`) permet de protéger l'état et d'imposer des invariants dans les méthodes publiques.
+A DDD Entity has a stable identity that distinguishes it from others, even when its attributes change. In NL, class instances have identity by reference: `a == b` compares references, not values. The Entity therefore naturally retains its identity across mutations. Encapsulation (`private`, `protected`) protects state and enforces invariants in public methods.
 
-### Aggregates et Aggregate Roots
+### Aggregates and Aggregate Roots
 
-Un Aggregate est un cluster d'objets du domaine dont les frontières de cohérence sont garanties par un Aggregate Root. NL ne fournit pas de concept dédié, mais le pattern est réalisable :
+An Aggregate is a cluster of domain objects whose consistency boundaries are guaranteed by an Aggregate Root. NL does not provide a dedicated concept, but the pattern is achievable:
 
-- L'Aggregate Root est une classe qui expose les opérations de modification.
-- Les entités internes sont `private` ou `protected` ; seules les méthodes du Root permettent d'y accéder.
-- Les invariants sont vérifiés dans le constructeur et dans les méthodes qui modifient l'état.
-- Le Root peut être `final` pour éviter des sous-classes qui contourneraient les invariants.
+- The Aggregate Root is a class that exposes modification operations.
+- Internal entities are `private` or `protected`; only the Root's methods allow access.
+- Invariants are checked in the constructor and in methods that modify state.
+- The Root can be `final` to prevent subclasses that would bypass invariants.
 
-### Repositories et ports/adapters
+### Repositories and Ports/Adapters
 
-Le pattern Repository abstrait la persistance derrière une interface. En NL, on définit une interface dans le domaine (port) et une implémentation concrète dans l'infrastructure (adapter). Le domaine ne dépend que de l'interface ; l'infrastructure dépend du domaine et implémente l'interface. L'inversion de dépendances est ainsi respectée sans framework.
+The Repository pattern abstracts persistence behind an interface. In NL, an interface is defined in the domain (port) and a concrete implementation in infrastructure (adapter). The domain depends only on the interface; infrastructure depends on the domain and implements the interface. Dependency inversion is thus respected without a framework.
 
-L'Application Service reçoit le Repository via son constructeur. Le point d'entrée (`main`) ou une factory construit les implémentations concrètes et les injecte. C'est le pattern « composition root ».
+The Application Service receives the Repository via its constructor. The entry point (`main`) or a factory builds the concrete implementations and injects them. This is the "composition root" pattern.
 
-### Bounded Contexts et namespaces
+### Bounded Contexts and Namespaces
 
-Un Bounded Context en DDD délimite un modèle et un langage ubiquitaire cohérents. En NL, les namespaces reflètent la hiérarchie de répertoires : `com.example.order.domain`, `com.example.inventory.domain`, etc. Chaque contexte peut avoir son propre sous-modèle : `order.domain`, `order.application`, `order.infrastructure`. Les imports (`use`) rendent explicites les dépendances entre contextes. Une convention stricte (ex. « le domaine ne dépend jamais de l'application ou de l'infrastructure ») peut être appliquée par revue de code ou par outils d'analyse.
+A DDD Bounded Context delimits a coherent model and ubiquitous language. In NL, namespaces reflect the directory hierarchy: `com.example.order.domain`, `com.example.inventory.domain`, etc. Each context can have its own submodel: `order.domain`, `order.application`, `order.infrastructure`. Imports (`use`) make dependencies between contexts explicit. A strict convention (e.g. "the domain never depends on application or infrastructure") can be enforced by code review or analysis tools.
 
-### Langage ubiquitaire
+### Ubiquitous Language
 
-Le langage ubiquitaire est le vocabulaire partagé entre experts métier et développeurs. En NL, les `typedef` permettent de nommer des types du domaine :
+The ubiquitous language is the vocabulary shared between business experts and developers. In NL, `typedef` allows naming domain types:
 
 ```nl
 typedef string Email;
 typedef int CustomerId;
 ```
 
-Les noms de classes, méthodes et propriétés reflètent le métier. Les enums capturent des états ou des valeurs métier explicites.
+Class, method, and property names reflect the business. Enums capture explicit business states or values.
 
 ### Domain Events
 
-Les Domain Events signalent qu'un fait métier s'est produit. NL n'a pas de mécanisme natif (type `event`, bus d'événements). Une implémentation manuelle consiste à :
+Domain Events signal that a business fact has occurred. NL has no native mechanism (event type, event bus). A manual implementation consists of:
 
-- Définir une interface `IDomainEvent` ou une classe de base d'événement.
-- Créer un registre d'handlers (liste de callbacks ou d'objets).
-- Dispatcher les événements de manière synchrone après une opération du domaine.
+- Defining an `IDomainEvent` interface or a base event class.
+- Creating a handler registry (list of callbacks or objects).
+- Dispatching events synchronously after a domain operation.
 
-Les closures et les interfaces permettent de passer des handlers sans difficulté.
+Closures and interfaces allow passing handlers without difficulty.
 
-### Ce que NL n'apporte pas (et ce qu'il faut compenser)
+### What NL Does Not Provide (and How to Compensate)
 
-- **DI** : pas de conteneur ou d'injection automatique. La composition root est manuelle.
-- **Module-level visibility** : pas de « package private » ou de modules avec visibilité explicite. Les conventions et la discipline de l'équipe compensent.
-- **RAII / try-with-resources** : le nettoyage des ressources repose sur les destructeurs (timing non garanti) ou les blocs `try/finally`. Un pattern explicite de libération peut être défini dans le domaine.
+- **DI:** no container or automatic injection. The composition root is manual.
+- **Module-level visibility:** no "package private" or modules with explicit visibility. Conventions and team discipline compensate.
+- **RAII / try-with-resources:** resource cleanup relies on destructors (timing not guaranteed) or `try/finally` blocks. An explicit release pattern can be defined in the domain.
 
-### Références aux spécifications
+### References to Specifications
 
-Les points ci-dessus s'appuient sur : specs.md (§ Classes, § Visibility, § Readonly, § ValueEquatable, § Extends/Implements, § Imports), stdlib.md (§ Core interfaces), compiler.md (vérifications de visibilité et de types), vm.md (format des modules et représentation des objets).
+The points above are based on: specs.md (§ Classes, § Visibility, § Readonly, § ValueEquatable, § Extends/Implements, § Imports), stdlib.md (§ Core interfaces), compiler.md (visibility and type checks), vm.md (module format and object representation).

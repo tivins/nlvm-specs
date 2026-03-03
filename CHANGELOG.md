@@ -1,10 +1,23 @@
 # Changelog
 
+## 0.8.17 — 2026-03-03
+
+### Changed
+
+- **review/architecture/solid-compatibility.md** — Translated from French to English.
+- **review/architecture/ddd-compatibility.md** — Translated from French to English.
+
+## 0.8.16 — 2026-03-03
+
+### Added
+
+- **review/architecture/solid-compatibility.md** — NL compatibility analysis with SOLID principles.
+
 ## 0.8.15 — 2026-03-03
 
 ### Added
 
-- **review/architecture/ddd-compatibility.md** — Analyse de compatibilité NL avec les principes Domain-Driven Design (DDD).
+- **review/architecture/ddd-compatibility.md** — NL compatibility analysis with Domain-Driven Design (DDD) principles.
 
 ## 0.8.14 — 2026-03-03
 
