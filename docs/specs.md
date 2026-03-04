@@ -382,6 +382,37 @@ if (condition) {
 // system.Out.print(z);  // compile-time error — z may not be assigned
 ```
 
+#### Variable shadowing
+
+NL allows **variable shadowing** (as in Java, C#, and Kotlin). An inner declaration hides an outer one of the same name within its scope.
+
+**Local or parameter shadowing a class field.** A local variable or parameter may have the same name as a class property. The unqualified name refers to the local or parameter; the field is accessible via `this.name`.
+
+```nl
+class Point {
+    private int x;
+    private int y;
+
+    public construct(int x, int y) {
+        this.x = x;   // parameter x shadows field; this.x accesses the field
+        this.y = y;
+    }
+}
+```
+
+**Block-scoped variable shadowing.** A variable declared in an inner block shadows a variable of the same name in an enclosing block. The inner declaration takes precedence within its block.
+
+```nl
+void example() {
+    int i = 0;
+    for (int i = 0; i < 10; i++) {  // loop variable i shadows outer i
+        system.Out.print(i);        // refers to loop variable
+    }
+}
+```
+
+Variables are **block-scoped**: a variable declared in a `for` init, an `if` block, or any `{ }` block is visible only within that block.
+
 #### Reserved keyword `undefined`
 
 `undefined` is a **reserved keyword** that cannot be used as an identifier. It does not participate in the type

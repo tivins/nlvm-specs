@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.21 — 2026-03-04
+
+### Changed
+
+- **docs/specs.md** — § Variable shadowing: local/parameter may shadow class field (use `this.name` for field); inner block variable may shadow outer. Block-scoping clarified. Resolves coherence II-3.
+- **docs/compiler.md** — § Variable shadowing: cross-reference to specs; shadowing allowed, no error emitted.
+
 ## 0.8.20 — 2026-03-04
 
 ### Changed

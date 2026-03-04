@@ -8,6 +8,7 @@ complements [specs.md](specs.md) (language semantics) and [stdlib.md](stdlib.md)
 
 * [Definite assignment analysis](#definite-assignment-analysis)
     * [Local variables](#local-variables)
+    * [Variable shadowing](#variable-shadowing)
     * [Class properties](#class-properties)
 * [Null safety](#null-safety)
     * [Assignment to non-nullable types](#assignment-to-non-nullable-types)
@@ -66,6 +67,10 @@ Control-flow constructs affect assignment status:
 **Error:** `E001 — Variable '%s' may not have been initialized`
 
 See: [specs.md § Definite assignment](specs.md#null-initialization-and-default-values)
+
+### Variable shadowing
+
+The compiler implements **variable shadowing** as defined in [specs.md § Variable shadowing](specs.md#variable-shadowing). A local variable or parameter may shadow a class field (the field remains accessible via `this.name`). A variable in an inner block may shadow a variable in an enclosing block. Shadowing is allowed; no error is emitted.
 
 ### Class properties
 

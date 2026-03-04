@@ -82,7 +82,7 @@ E030 (reserved keywords), E031 (arrays), E032–E036 (abstract/final), E037 (tem
 
 ### II-3. Variable shadowing rules not specified
 
-- [ ] Can a local variable shadow a class field? Can a block-scoped variable shadow an enclosing block's variable? Specs.md does not define shadowing rules.
+- [x] Can a local variable shadow a class field? Can a block-scoped variable shadow an enclosing block's variable? Specs.md does not define shadowing rules. *(fixed 0.8.21: specs.md § Variable shadowing — both forms allowed; local/parameter shadows field, inner block shadows outer; compiler.md cross-reference added)*
 
 ### II-4. Byte literal syntax not defined
 
