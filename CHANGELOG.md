@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.26 — 2026-03-05
+
+### Added
+
+- **docs/showcase.md** — Complete example program (task manager CLI) illustrating NL's core principles: null safety, readonly classes, checked exceptions, typed enums, templates, interfaces, closures, and standard library usage. Linked from README.
+
 ## 0.8.25 — 2026-03-04
 
 ### Changed

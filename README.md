@@ -17,6 +17,7 @@
 | [tests.md](docs/tests.md) | Test file format (YAML, `#NLFILE` blocks) for `tests/` |
 | [milestones.md](docs/milestones.md) | Implementation roadmap — 9 phases from lexer to optimizations |
 | [optimizations.md](docs/optimizations.md) | Optimization contract — what implementations *may* optimize |
+| [showcase.md](docs/showcase.md) | Complete example program — NL principles in action |
 
 ---
 
@@ -24,7 +25,7 @@
 
 | Goal | Path |
 |------|------|
-| **Discover NL** | [specs.md](docs/specs.md) → Language highlights below |
+| **Discover NL** | [specs.md](docs/specs.md) → [showcase.md](docs/showcase.md) → Language highlights below |
 | **Implement a compiler** | [specs.md](docs/specs.md) → [compiler.md](docs/compiler.md) → [milestones.md](docs/milestones.md) |
 | **Implement a VM** | [specs.md](docs/specs.md) → [stdlib.md](docs/stdlib.md) → [vm.md](docs/vm.md) → [milestones.md](docs/milestones.md) |
 | **Evaluate NL for SOLID/DDD** | [solid-compatibility.md](review/architecture/solid-compatibility.md), [ddd-compatibility.md](review/architecture/ddd-compatibility.md) |
