@@ -248,7 +248,7 @@ This is a denial-of-service vector: any NL program that parses external input (C
 
 **Description:** `close()` is documented as idempotent, but the behavior of `read()`, `write()`, `readLine()`, `flush()` after `close()` is unspecified. Depending on the implementation, this could produce corrupted data, silently succeed (writing to a reused file descriptor), or crash.
 
-**Recommendation:** Specify that calling I/O methods on a closed handle throws `IOException` (or a dedicated `ClosedResourceException`).
+**Recommendation:** Specify that calling I/O methods on a closed handle throws `IOException` (or a dedicated `ClosedResourceException`). *(Specified in stdlib.md 0.8.23: FileHandle, TcpStream, UdpSocket — read/write/flush/send/receive on closed handle throw IOException.)*
 
 ---
 
@@ -494,7 +494,7 @@ Several coherence.md items have direct security implications:
 10. **SEC-04**: StackOverflowException + configurable resource limits.
 11. **SEC-08**: Specify TLS certificate validation requirements.
 12. **SEC-09**: Add `system.SecureRandom` CSPRNG.
-13. **SEC-11**: Specify IOException on read/write after close.
+13. ~~**SEC-11**: Specify IOException on read/write after close.~~ *(fixed 0.8.23)*
 14. **SEC-12**: Design try-with-resources or RAII mechanism.
 
 ### Long-term (2.x+)

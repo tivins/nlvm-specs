@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.8.23 — 2026-03-04
+
+### Added
+
+- **tests/m7_0030_read_after_close_cwe416.yaml** — Run test: read after close on FileHandle must throw IOException (CWE-416, SEC-11).
+
+### Changed
+
+- **docs/stdlib.md** — § system.io.FileHandle, system.net.TcpStream, system.net.UdpSocket: specified that read/write/flush (FileHandle), read/write (TcpStream), send/receive (UdpSocket) on a closed handle throw `IOException`. Resolves SEC-11 (Read/Write After Close).
+
 ## 0.8.22 — 2026-03-04
 
 ### Added

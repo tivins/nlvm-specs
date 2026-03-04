@@ -487,7 +487,7 @@ Represents an open file. Obtained from `system.io.File.open`. Implements resourc
 | `write` | `void write(string text) throws IOException` | Writes the string to the file (no trailing `\n` added). |
 | `flush` | `void flush() throws IOException` | Flushes the write buffer to the file. |
 
-The runtime may provide a destructor that calls `close()` if the handle goes out of scope without being closed. Multiple calls to `close()` have no effect after the first.
+The runtime may provide a destructor that calls `close()` if the handle goes out of scope without being closed. Multiple calls to `close()` have no effect after the first. **After the handle has been closed, any call to `read`, `readLine`, `write`, or `flush` throws `IOException`.**
 
 **Example**
 
@@ -607,7 +607,7 @@ Represents a connected TCP stream, obtained from `TcpListener.accept()` or `TcpS
 | `write` | `void write(byte[] data, int offset, int length) throws IOException` | Writes `length` bytes from `data` at `offset` to the stream. |
 | `close` | `void close()` | Closes the connection. Idempotent. |
 
-The runtime may provide a destructor that calls `close()` if the stream goes out of scope without being closed.
+The runtime may provide a destructor that calls `close()` if the stream goes out of scope without being closed. **After the stream has been closed, any call to `read` or `write` throws `IOException`.**
 
 **Example**
 
@@ -632,6 +632,8 @@ UDP datagram socket for connectionless communication. Can send and receive datag
 | `send` | `void send(string host, int port, byte[] data) throws IOException` | Sends `data` to `host:port`. |
 | `receive` | `int receive(byte[] buffer) throws IOException` | Receives a datagram into `buffer`. Returns number of bytes received. |
 | `close` | `void close()` | Closes the socket. Idempotent. |
+
+After the socket has been closed, any call to `send` or `receive` throws `IOException`.
 
 **Example**
 
@@ -909,8 +911,8 @@ Standard exceptions used by the system API. The hierarchy (Runtime vs Checked) i
 | `NumberFormatException` | Runtime | `system` | `system.Int.parseInt`, `system.Float.parseFloat` when the string format is invalid |
 | `IllegalArgumentException` | Runtime | `system` | `enum.from()` when value does not match any case; `system.time.TimeZone.get()` when the timezone ID is unknown |
 | `FileNotFoundException` | Checked | `system.io` | `system.io.File.open`, `system.io.File.readAllText` when the path does not exist or is not a file |
-| `IOException` | Checked | `system.io` | `system.io.File`, `system.io.Directory`, `system.io.Path`, `system.io.Grep`, and other I/O failures |
-| `IOException` | Checked | `system.net` | `system.net.TcpListener`, `system.net.TcpStream`, `system.net.UdpSocket`, `system.net.Http` on connection or read/write failure |
+| `IOException` | Checked | `system.io` | `system.io.File`, `system.io.Directory`, `system.io.Path`, `system.io.Grep`, and other I/O failures; **read/write/flush on closed FileHandle** |
+| `IOException` | Checked | `system.net` | `system.net.TcpListener`, `system.net.TcpStream`, `system.net.UdpSocket`, `system.net.Http` on connection or read/write failure; **read/write on closed TcpStream; send/receive on closed UdpSocket** |
 | `IOException` | Checked | `system.ps` | `system.ps.Process.run()`, `system.ps.Process.setCwd()` when the process cannot be started or the path is invalid |
 | `InterruptedException` | Checked | `system.thread` | Thrown when a thread is interrupted while blocked in `join()` or `sleep()`. |
 | `FormatException` | Checked | `system.time` | `system.time.DateTime.parse()` when the string format is invalid. |

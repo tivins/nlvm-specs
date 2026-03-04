@@ -1,0 +1,28 @@
+---
+title: "Read after close throws IOException (CWE-416)"
+file_separator: "#NLFILE"
+expected_exit_code: 0
+expected_stdout: ""
+---
+
+#NLFILE io/read_after_close/Main.nl
+namespace io.read_after_close;
+class Main 
+{
+	public static int main(string[] args) 
+	{
+		try 
+		{
+			system.io.File.writeAllText("_tmp_read_after_close.txt", "x");
+			auto h = system.io.File.open("_tmp_read_after_close.txt");
+			h.close();
+			byte[] buf = new byte[1];
+			h.read(buf, 0, 1);
+			return 1;
+		} 
+		catch (system.io.IOException e) 
+		{
+			return 0;
+		}
+	}
+}

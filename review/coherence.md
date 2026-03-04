@@ -19,7 +19,7 @@ Audit performed on **2026-03-03**, against spec version **0.8.1**.
 | [V. Standard library issues](#v-standard-library-issues) | 8 (1 resolved) | stdlib.md problems (inconsistencies, missing API) |
 | [VI. Under-specified semantics](#vi-under-specified-semantics) | 9 | Defined but incomplete — a compiler/VM implementor cannot proceed without guessing |
 | [VII. Documentation and editorial errors](#vii-documentation-and-editorial-errors) | 6 (6 resolved) | Typos, wrong numbers, stale cross-references |
-| [VIII. Security-related specification gaps](#viii-security-related-specification-gaps) | 10 | Missing security hardening, unsafe APIs, unspecified safety behavior — see [security-audit.md](security-audit.md) |
+| [VIII. Security-related specification gaps](#viii-security-related-specification-gaps) | 10 (1 resolved) | Missing security hardening, unsafe APIs, unspecified safety behavior — see [security-audit.md](security-audit.md) |
 
 ---
 
@@ -403,7 +403,7 @@ E030 (reserved keywords), E031 (arrays), E032–E036 (abstract/final), E037 (tem
 
 ### VIII-8. Read/write after close behavior unspecified
 
-- [ ] **stdlib.md § system.io.FileHandle, system.net.TcpStream, system.net.UdpSocket** — `close()` is idempotent, but the behavior of `read()`, `write()`, `readLine()`, `flush()` after `close()` is not specified. Should throw `IOException`. *[SEC-11]*
+- [x] **stdlib.md § system.io.FileHandle, system.net.TcpStream, system.net.UdpSocket** — `close()` is idempotent, but the behavior of `read()`, `write()`, `readLine()`, `flush()` after `close()` is not specified. Should throw `IOException`. *[SEC-11]* *(fixed 0.8.23)*
 
 ### VIII-9. `Regex.match` — full vs partial match unspecified
 
