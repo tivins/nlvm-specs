@@ -1,4 +1,11 @@
-# NL — Language Specification
+# NLVM — Language Specification
+
+---
+
+- **Docs :** [tivins.github.io/nlvm-specs](https://tivins.github.io/nlvm-specs/)
+- **Source :** [github.com/tivins/nlvm-specs](https://github.com/tivins/nlvm-specs)
+
+---
 
 **NL** is a statically-typed, object-oriented programming language designed for type safety and clarity. It draws from C++ (templates, type system), Java (syntax, file layout), modern PHP (match, typed enums), and Kotlin-style null safety with compile-time initialization guarantees.
 
