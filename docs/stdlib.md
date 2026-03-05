@@ -357,6 +357,8 @@ string id = system.Uuid.random();
 
 Dynamic sequence of elements of type `T`. Use when you need to add or remove elements (unlike fixed-size arrays). Lives in namespace `system`; use as `system.List<T>`.
 
+**Thread safety:** `List<T>` is **not** thread-safe. Heap objects are shared across threads (see [vm.md § Threading model](vm.md#threading-model)). When multiple threads access the same list, the caller must synchronize access using `system.thread.Mutex` (or another synchronization primitive) to avoid data races and corruption.
+
 | Method | Signature | Description |
 |--------|------------|-------------|
 | `construct` | `construct()` | Creates an empty list. |
@@ -393,6 +395,8 @@ bool has = list.contains(2); // true if 2 is in the list
 ## system.Map
 
 Key-value storage with keys of type `K` and values of type `V`. Lives in namespace `system`; use as `system.Map<K, V>`.
+
+**Thread safety:** `Map<K, V>` is **not** thread-safe. Heap objects are shared across threads (see [vm.md § Threading model](vm.md#threading-model)). When multiple threads access the same map, the caller must synchronize access using `system.thread.Mutex` (or another synchronization primitive) to avoid data races and corruption.
 
 **Key equality semantics:**
 
@@ -688,6 +692,7 @@ Represents a thread of execution. The thread is created with a task (anonymous f
 | `start` | `void start()` | Starts the thread. The task runs in parallel. Must not be called more than once. |
 | `join` | `void join() throws InterruptedException` | Blocks until the thread has finished. |
 | `join` | `bool join(int timeoutMillis) throws InterruptedException` | Blocks until the thread has finished or `timeoutMillis` have elapsed. Returns `true` if the thread finished, `false` if timeout. |
+| `isAlive` | `bool isAlive()` | Returns `true` if the thread has been started and has not yet finished; `false` otherwise. Non-blocking. |
 | `sleep` | `static void sleep(int millis) throws InterruptedException` | Puts the current thread to sleep for `millis` milliseconds. |
 
 **Example**

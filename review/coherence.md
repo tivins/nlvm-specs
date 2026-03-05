@@ -16,7 +16,7 @@ Audit performed on **2026-03-03**, against spec version **0.8.1**.
 | [II. Language specification omissions](#ii-language-specification-omissions) | 17 (10 resolved) | Features referenced or implied but never formally defined in specs.md |
 | [III. Incorrect examples](#iii-incorrect-examples) | 11 (8 resolved) | Code that would not compile, produces wrong results, or contradicts the spec |
 | [IV. VM and compiler specification gaps](#iv-vm-and-compiler-specification-gaps) | 8 (3 resolved) | Missing pieces in vm.md or compiler.md |
-| [V. Standard library issues](#v-standard-library-issues) | 8 (5 resolved) | stdlib.md problems (inconsistencies, missing API) |
+| [V. Standard library issues](#v-standard-library-issues) | 8 (7 resolved) | stdlib.md problems (inconsistencies, missing API) |
 | [VI. Under-specified semantics](#vi-under-specified-semantics) | 9 (1 resolved) | Defined but incomplete — a compiler/VM implementor cannot proceed without guessing |
 | [VII. Documentation and editorial errors](#vii-documentation-and-editorial-errors) | 6 (6 resolved) | Typos, wrong numbers, stale cross-references |
 | [VIII. Security-related specification gaps](#viii-security-related-specification-gaps) | 10 (1 resolved) | Missing security hardening, unsafe APIs, unspecified safety behavior — see [security-audit.md](security-audit.md) |
@@ -275,11 +275,11 @@ E030 (reserved keywords), E031 (arrays), E032–E036 (abstract/final), E037 (tem
 
 ### V-4. `system.thread.Thread` — no `isAlive()` method
 
-- [ ] There is no way to check if a thread is still running without blocking on `join()`. An `isAlive()` method (returning `bool`) is standard in most threading APIs.
+- [x] There is no way to check if a thread is still running without blocking on `join()`. An `isAlive()` method (returning `bool`) is standard in most threading APIs. *(fixed 0.8.33: stdlib.md § system.thread.Thread — added isAlive())*
 
 ### V-5. Thread safety of collections not documented
 
-- [ ] `system.List<T>` and `system.Map<K, V>` are heap objects shared across threads (vm.md § Threading model). The spec does not state whether they are thread-safe or require external synchronization. This must be documented (most likely: *not* thread-safe — caller must use a `Mutex`).
+- [x] `system.List<T>` and `system.Map<K, V>` are heap objects shared across threads (vm.md § Threading model). The spec does not state whether they are thread-safe or require external synchronization. This must be documented (most likely: *not* thread-safe — caller must use a `Mutex`). *(fixed 0.8.34: stdlib.md § system.List, § system.Map — explicit "not thread-safe" note; caller must use Mutex for concurrent access)*
 
 ### V-6. `system.io.File.open` — no file mode parameter
 

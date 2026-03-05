@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.8.34 — 2026-03-05
+
+### Changed
+
+- **docs/stdlib.md** — § system.List, § system.Map: explicit **thread safety** note — not thread-safe; heap objects are shared across threads (vm.md § Threading model); caller must use `system.thread.Mutex` (or another synchronization primitive) when multiple threads access the same list or map. Resolves coherence V-5.
+
+### Updated references
+
+- **review/coherence.md** — V-5 marked resolved.
+
+## 0.8.33 — 2026-03-05
+
+### Added
+
+- **docs/stdlib.md** — § system.thread.Thread: `isAlive()` returns `true` if the thread has been started and has not yet finished, `false` otherwise. Non-blocking. Resolves coherence V-4.
+
+### Updated references
+
+- **review/coherence.md** — V-4 marked resolved.
+
 ## 0.8.32 — 2026-03-05
 
 ### Added
