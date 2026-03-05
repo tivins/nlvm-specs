@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.8.36 — 2026-03-05
+
+### Changed
+
+- **review/coherence.md** — Archived 49 resolved items to `archives/coherence_closed_20260305.md`; main file now lists only 28 open items (II, IV, VI, VIII) for clarity.
+
+## 0.8.35 — 2026-03-05
+
+### Added
+
+- **docs/stdlib.md** — § system.io.FileMode: enum with cases `Read`, `Write`, `Append`, `ReadWrite`, `ReadWriteTruncate`, `ReadWriteAppend` controlling how a file is opened. § system.io.File: overload `open(string path, FileMode mode)` for mode-controlled access. Resolves coherence V-6.
+
+### Updated references
+
+- **docs/specs.md** — § Standard library: added FileMode reference and open(path, mode) description.
+- **docs/milestones.md** — File system: added FileMode to scope.
+- **review/coherence.md** — V-6 marked resolved.
+
 ## 0.8.34 — 2026-03-05
 
 ### Changed

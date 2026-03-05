@@ -210,7 +210,7 @@ Implement native bindings for all `system.*` classes.
 - **I/O:** `system.Out`, `system.Err`, `system.In` — [stdlib.md § system.Out](stdlib.md#systemout-stdout), [§ system.Err](stdlib.md#systemerr-stderr), [§ system.In](stdlib.md#systemin-stdin).
 - **Parsing:** `system.Int`, `system.Float`, `system.Bool` — [stdlib.md § system.Int](stdlib.md#systemint), [§ system.Float](stdlib.md#systemfloat), [§ system.Bool](stdlib.md#systembool).
 - **Collections:** `system.List<T>`, `system.Map<K,V>` — [stdlib.md § system.List](stdlib.md#systemlist), [§ system.Map](stdlib.md#systemmap). Template instantiation via naming convention (`"system.List<int>"`).
-- **File system:** `system.io.File`, `system.io.FileHandle`, `system.io.Directory`, `system.io.Path`, `system.io.Grep` — [stdlib.md § system.io](stdlib.md#systemiofile).
+- **File system:** `system.io.File`, `system.io.FileMode`, `system.io.FileHandle`, `system.io.Directory`, `system.io.Path`, `system.io.Grep` — [stdlib.md § system.io](stdlib.md#systemiofile).
 - **Network:** `system.net.TcpListener`, `system.net.TcpStream`, `system.net.UdpSocket`, `system.net.Http` — [stdlib.md § system.net](stdlib.md#systemnettcplistener).
 - **Threading:** `system.thread.Thread`, `system.thread.Mutex`, `system.thread.Semaphore` — [stdlib.md § system.thread](stdlib.md#systemthreadthread). Memory visibility rules — [vm.md § Threading model](vm.md#threading-model).
 - **Date/Time:** `system.time.DateTime`, `system.time.TimeZone` — [stdlib.md § system.time](stdlib.md#systemtimedatetime).

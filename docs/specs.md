@@ -2437,7 +2437,7 @@ This rule ensures substitutability: callers that handle the parent's declared ex
 
 ## Standard library
 
-System interaction (console, parsing, file system, network, threads, time, environment, process, text utilities) is provided by the **standard library** in the namespaces `system`, `system.io`, `system.net`, `system.thread`, `system.time`, `system.Env`, `system.ps`, and `system.text`. Types such as `system.Out`, `system.Err`, `system.In`, `system.Int`, `system.Float`, `system.String`, `system.io.File`, and `system.io.FileHandle` offer static or instance methods for I/O and parsing. A `system.io.FileHandle` (from `system.io.File.open`) supports `read`, `readLine`, `write`, and `flush` for line-by-line or binary access in addition to `close`. See **[stdlib.md](stdlib.md)** for the full API.
+System interaction (console, parsing, file system, network, threads, time, environment, process, text utilities) is provided by the **standard library** in the namespaces `system`, `system.io`, `system.net`, `system.thread`, `system.time`, `system.Env`, `system.ps`, and `system.text`. Types such as `system.Out`, `system.Err`, `system.In`, `system.Int`, `system.Float`, `system.String`, `system.io.File`, `system.io.FileMode`, and `system.io.FileHandle` offer static or instance methods for I/O and parsing. A `system.io.FileHandle` (from `system.io.File.open`) supports `read`, `readLine`, `write`, and `flush` for line-by-line or binary access in addition to `close`. `system.io.File.open(path, mode)` accepts a `FileMode` to control read-only, write-only, append, truncate, or create behavior. See **[stdlib.md](stdlib.md)** for the full API.
 
 ## Entry point
 

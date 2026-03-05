@@ -22,6 +22,7 @@ This document describes the virtual standard library provided by the NL runtime 
 * [system.List](#systemlist)
 * [system.Map](#systemmap)
 * [system.Env](#systemenv)
+* [system.io.FileMode](#systemiofilemode)
 * [system.io.File](#systemiofile)
 * [system.io.File (glob)](#systemiofile-glob)
 * [system.io.FileHandle](#systemiofilehandle)
@@ -49,7 +50,7 @@ This document describes the virtual standard library provided by the NL runtime 
 | Namespace   | Purpose                          |
 |------------|-----------------------------------|
 | `system`   | Standard streams (Out, Err, In), parsing and conversion (Int, Float, Bool), String, Random, Uuid, Env, **List&lt;T&gt;**, **Map&lt;K,V&gt;**, **MapEntry&lt;K,V&gt;**; core interfaces (Stringable, Cloneable, ValueEquatable) |
-| `system.io`| File system (File, FileHandle, Directory, Path), glob, Grep |
+| `system.io`| File system (File, FileHandle, FileMode, Directory, Path), glob, Grep |
 | `system.net`| Network (TcpListener, TcpStream, UdpSocket, Http) |
 | `system.thread`| Threads (Thread), synchronization (Mutex, Semaphore) |
 | `system.time`| Date, time, timezone (DateTime, TimeZone) |
@@ -448,6 +449,23 @@ for (const auto entry : map) {
 
 ---
 
+## system.io.FileMode
+
+Enum controlling how a file is opened. Used by `system.io.File.open(string path, FileMode mode)`.
+
+| Case | Read | Write | File absent | File exists |
+|------|------|-------|-------------|-------------|
+| `Read` | ✓ | ✗ | `FileNotFoundException` | Opens at start |
+| `Write` | ✗ | ✓ | Creates | Truncates |
+| `Append` | ✗ | ✓ | Creates | Opens at end |
+| `ReadWrite` | ✓ | ✓ | `FileNotFoundException` | Opens at start |
+| `ReadWriteTruncate` | ✓ | ✓ | Creates | Truncates |
+| `ReadWriteAppend` | ✓ | ✓ | Creates | Opens at end |
+
+Calling `read`, `readLine` on a handle opened without read capability, or `write`, `flush` on a handle opened without write capability, throws `IOException`.
+
+---
+
 ## system.io.File
 
 Static operations on the file system. All methods are **static**.
@@ -455,7 +473,8 @@ Static operations on the file system. All methods are **static**.
 | Method | Signature | Description |
 |--------|------------|-------------|
 | `exists` | `static bool exists(string path)` | Returns `true` if a file or directory exists at `path`. |
-| `open` | `static FileHandle open(string path) throws FileNotFoundException` | Opens the file at `path` for reading and/or writing. Returns a handle that must be closed. |
+| `open` | `static FileHandle open(string path) throws FileNotFoundException` | Opens the file at `path` for reading and writing (equivalent to `ReadWrite`). Returns a handle that must be closed. |
+| `open` | `static FileHandle open(string path, FileMode mode) throws FileNotFoundException` | Opens the file at `path` with the given mode. Returns a handle that must be closed. |
 | `readAllText` | `static string readAllText(string path) throws FileNotFoundException, IOException` | Reads the entire file at `path` as a string. |
 | `writeAllText` | `static void writeAllText(string path, string content) throws IOException` | Overwrites the file at `path` with `content`. |
 | `glob` | `static string[] glob(string basePath, string pattern) throws IOException` | Returns paths under `basePath` matching `pattern` (glob or regex). See [Glob](#systemiofile-glob). |
@@ -469,6 +488,10 @@ if (system.io.File.exists("data.txt")) {
 auto handle = system.io.File.open("data.txt");
 // ... use handle ...
 handle.close();
+
+// Open read-only or append
+auto ro = system.io.File.open("config.txt", system.io.FileMode.Read);
+auto log = system.io.File.open("app.log", system.io.FileMode.Append);
 ```
 
 #### system.io.File (glob)
@@ -926,7 +949,7 @@ Standard exceptions used by the system API. The hierarchy (Runtime vs Checked) i
 | `NumberFormatException` | Runtime | `system` | `system.Int.parse`, `system.Float.parse` when the string format is invalid |
 | `IllegalArgumentException` | Runtime | `system` | `enum.from()` when value does not match any case; `system.Bool.parse` when string is not `"true"` or `"false"`; `system.time.TimeZone.get()` when the timezone ID is unknown |
 | `StackOverflowException` | Runtime | `system` | Thrown by the VM when the call stack is exhausted (e.g. infinite recursion) |
-| `FileNotFoundException` | Checked | `system.io` | `system.io.File.open`, `system.io.File.readAllText` when the path does not exist or is not a file |
+| `FileNotFoundException` | Checked | `system.io` | `system.io.File.open`, `system.io.File.readAllText` when the path does not exist or is not a file (modes `Read`, `ReadWrite` require existing file) |
 | `IOException` | Checked | `system.io` | `system.io.File`, `system.io.Directory`, `system.io.Path`, `system.io.Grep`, and other I/O failures; **read/write/flush on closed FileHandle** |
 | `IOException` | Checked | `system.net` | `system.net.TcpListener`, `system.net.TcpStream`, `system.net.UdpSocket`, `system.net.Http` on connection or read/write failure; **read/write on closed TcpStream; send/receive on closed UdpSocket** |
 | `IOException` | Checked | `system.ps` | `system.ps.Process.run()`, `system.ps.Process.setCwd()` when the process cannot be started or the path is invalid |
