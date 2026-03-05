@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.39 — 2026-03-06
+
+### Added
+
+- **Docsify front** — `index.html`, `_sidebar.md`, `.nojekyll` for a browsable docs site. Serves specs from markdown with sidebar navigation and search. Deploy via GitHub Pages (see README).
+
 ## 0.8.38 — 2026-03-06
 
 ### Changed
