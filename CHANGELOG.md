@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.30 — 2026-03-05
+
+### Changed
+
+- **docs/stdlib.md** — § system.String: `trim` and `split` are now instance methods on string values (`text.trim()`, `s.split(delimiter)`); static forms `trim(string)` and `split(string, delimiter)` kept for flexibility. Resolves coherence V-2.
+- **docs/showcase.md**, **docs/specs.md** — Updated examples to use instance method syntax.
+
 ## 0.8.29 — 2026-03-05
 
 ### Changed

@@ -192,7 +192,7 @@ class FileRepository implements Repository<Task> {
     }
 
     private Task|null parseLine(string line) {
-        string[] parts = system.String.split(line, "|");
+        string[] parts = line.split("|");
         if (parts.length() < 5) {
             return null;
         }
@@ -361,7 +361,7 @@ class Main {
         while (running) {
             system.Out.print("> ");
             string|null input = system.In.readLine();
-            string command = system.String.trim(input ?? "quit");
+            string command = (input ?? "quit").trim();
 
             switch (command) {
                 case "add":
@@ -395,18 +395,18 @@ class Main {
 
     private static void handleAdd(TaskService service) {
         system.Out.print("Title: ");
-        string title = system.String.trim(system.In.readLine() ?? "");
+        string title = (system.In.readLine() ?? "").trim();
         if (title == "") {
             system.Out.println("Title cannot be empty.");
             return;
         }
 
         system.Out.print("Description (or empty): ");
-        string rawDesc = system.String.trim(system.In.readLine() ?? "");
+        string rawDesc = (system.In.readLine() ?? "").trim();
         string|null description = rawDesc == "" ? null : rawDesc;
 
         system.Out.print("Priority (low/medium/high) [medium]: ");
-        string rawPriority = system.String.trim(system.In.readLine() ?? "");
+        string rawPriority = (system.In.readLine() ?? "").trim();
         string priorityInput = rawPriority == "" ? "medium" : rawPriority;
 
         Priority|null priority = Priority.tryFrom(priorityInput);
@@ -434,7 +434,7 @@ class Main {
 
     private static void handleDone(TaskService service) {
         system.Out.print("Task ID: ");
-        string rawId = system.String.trim(system.In.readLine() ?? "");
+        string rawId = (system.In.readLine() ?? "").trim();
         if (rawId == "") {
             return;
         }

@@ -266,7 +266,7 @@ string s = system.Bool.toString(true);  // "true"
 
 ## system.String
 
-Static string utilities and **instance methods on string values**. String values (expression type `string`) support the instance methods listed below; `system.String` also provides static methods.
+Static string utilities and **instance methods on string values**. String values (expression type `string`) support the instance methods listed below. The static forms `trim(string)` and `split(string, delimiter)` are also available when passing a string as argument is preferred — e.g. when the string is `const` (parameter, local) and you want to make the read-only intent explicit, or to avoid a temporary receiver.
 
 Conversion of other types to string: primitives use `system.Int.toString`, `system.Float.toString`, and `system.Bool.toString`; reference types that implement the **Stringable** interface (see [specs.md](specs.md)#stringable-interface) are converted by calling `toString()`.
 
@@ -288,13 +288,17 @@ Called on a string value, e.g. `text.length()`, `name.toUpperCase()`.
 | `replace` | `string replace(string from, string to)` | Returns a new string with all occurrences of `from` replaced by `to`. |
 | `startsWith` | `bool startsWith(string prefix)` | Returns `true` if the string starts with `prefix`. |
 | `endsWith` | `bool endsWith(string suffix)` | Returns `true` if the string ends with `suffix`. |
+| `trim` | `string trim()` | Returns a new string with leading and trailing whitespace removed. |
+| `split` | `string[] split(string delimiter)` | Splits the string on `delimiter` and returns an array of substrings. |
 
 ### Static methods (system.String)
 
+Equivalent to the instance methods; useful when the string is `const` or when passing it as argument is preferred.
+
 | Method | Signature | Description |
 |--------|------------|-------------|
-| `trim` | `static string trim(string s)` | Returns a new string with leading and trailing whitespace removed. |
-| `split` | `static string[] split(string s, string delimiter)` | Splits `s` on `delimiter` and returns an array of substrings. |
+| `trim` | `static string trim(string s)` | Returns a new string with leading and trailing whitespace removed. Same as `s.trim()`. |
+| `split` | `static string[] split(string s, string delimiter)` | Splits `s` on `delimiter` and returns an array of substrings. Same as `s.split(delimiter)`. |
 
 **Example**
 
@@ -302,11 +306,11 @@ Called on a string value, e.g. `text.length()`, `name.toUpperCase()`.
 string text = "  Hello, World  ";
 int n = text.length();                    // 16
 string upper = text.toUpperCase();        // "  HELLO, WORLD  "
-string trimmed = system.String.trim(text); // "Hello, World"
-string[] parts = system.String.split("a,b,c", ",");
+string trimmed = text.trim();             // "Hello, World" — or system.String.trim(text)
+string[] parts = "a,b,c".split(",");     // or system.String.split("a,b,c", ",")
 bool b = text.startsWith("  He");        // true
 int i = text.indexOf("World");           // 9
-string sub = text.substring(2, 8);        // "Hello,"
+string sub = text.substring(2, 8);       // "Hello,"
 ```
 
 ---

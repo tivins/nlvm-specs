@@ -1395,7 +1395,7 @@ The `final` modifier restricts inheritance and overriding:
 
 ```nl
 final class StringUtils {
-    public static string trim(string s) { /* ... */ }
+    /* ... */
 }
 // class Extended extends StringUtils { }  // Error: cannot extend final class
 

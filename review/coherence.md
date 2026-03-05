@@ -16,7 +16,7 @@ Audit performed on **2026-03-03**, against spec version **0.8.1**.
 | [II. Language specification omissions](#ii-language-specification-omissions) | 17 (10 resolved) | Features referenced or implied but never formally defined in specs.md |
 | [III. Incorrect examples](#iii-incorrect-examples) | 11 (8 resolved) | Code that would not compile, produces wrong results, or contradicts the spec |
 | [IV. VM and compiler specification gaps](#iv-vm-and-compiler-specification-gaps) | 7 (2 resolved) | Missing pieces in vm.md or compiler.md |
-| [V. Standard library issues](#v-standard-library-issues) | 8 (3 resolved) | stdlib.md problems (inconsistencies, missing API) |
+| [V. Standard library issues](#v-standard-library-issues) | 8 (4 resolved) | stdlib.md problems (inconsistencies, missing API) |
 | [VI. Under-specified semantics](#vi-under-specified-semantics) | 9 (1 resolved) | Defined but incomplete — a compiler/VM implementor cannot proceed without guessing |
 | [VII. Documentation and editorial errors](#vii-documentation-and-editorial-errors) | 6 (6 resolved) | Typos, wrong numbers, stale cross-references |
 | [VIII. Security-related specification gaps](#viii-security-related-specification-gaps) | 10 (1 resolved) | Missing security hardening, unsafe APIs, unspecified safety behavior — see [security-audit.md](security-audit.md) |
@@ -261,9 +261,9 @@ E030 (reserved keywords), E031 (arrays), E032–E036 (abstract/final), E037 (tem
 
 - [x] `system.Int` has `parse`, `system.Float` has `parse`, but `system.Bool` had only `toString`. There was no `parse(string s)` for converting `"true"` / `"false"` to `bool`. This was an API asymmetry. *(fixed 0.8.28: stdlib.md § system.Bool — added parse; 0.8.29: renamed parseInt/parseFloat/parseBool to parse across Int, Float, Bool)*
 
-### V-2. `system.String` — `trim` and `split` are static but peers are instance methods
+### V-2. `system.String` — `trim` and `split` were static but peers are instance methods
 
-- [ ] String instance methods (`length`, `charAt`, `substring`, `indexOf`, `contains`, `replace`, `toUpperCase`, `toLowerCase`, `startsWith`, `endsWith`) are called on string values: `text.length()`. But `trim` and `split` are static methods: `system.String.trim(text)` and `system.String.split(s, delim)`. This asymmetry is a design choice but it forces users to remember which methods are where. Consider making `trim()` and `split(delim)` instance methods for consistency.
+- [x] String instance methods (`length`, `charAt`, `substring`, `indexOf`, `contains`, `replace`, `toUpperCase`, `toLowerCase`, `startsWith`, `endsWith`) are called on string values: `text.length()`. But `trim` and `split` were static methods: `system.String.trim(text)` and `system.String.split(s, delim)`. This asymmetry forced users to remember which methods are where. *(fixed 0.8.30: stdlib.md § system.String — trim() and split(delimiter) are now instance methods; static forms trim(s) and split(s, delim) kept for flexibility)*
 
 ### V-3. `system.List<T>` — no positional `remove` or `contains`
 
