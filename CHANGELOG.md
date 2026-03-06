@@ -5,6 +5,7 @@
 ### Added
 
 - **Docsify front** — `index.html`, `_sidebar.md`, `.nojekyll` for a browsable docs site. Serves specs from markdown with sidebar navigation and search. Deploy via GitHub Pages (see README).
+- **Docsify dark/light theme** — `docsify-darklight-theme` with toggle, system preference detection, and localStorage persistence.
 
 ## 0.8.38 — 2026-03-06
 

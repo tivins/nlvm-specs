@@ -1,0 +1,22 @@
+/* Override headings and borders in dark mode — less bright */
+html.docsify-dark .markdown-section h1,
+html.docsify-dark .markdown-section h2,
+html.docsify-dark .markdown-section h3,
+html.docsify-dark .markdown-section h4,
+html.docsify-dark .markdown-section h5,
+html.docsify-dark .markdown-section h6 {
+  color: #a0a8b0 !important;
+}
+
+html.docsify-dark .sidebar,
+html.docsify-dark .markdown-section hr,
+html.docsify-dark .markdown-section td,
+html.docsify-dark .markdown-section th,
+html.docsify-dark .markdown-section pre,
+html.docsify-dark .search input {
+  border-color: #1e2d3a !important;
+}
+
+html.docsify-dark .sidebar ul li a {
+  color: #9098a0 !important;
+}
