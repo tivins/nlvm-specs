@@ -789,7 +789,17 @@ Represents a thread of execution. The thread is created with a task (anonymous f
 | `join` | `void join() throws InterruptedException` | Blocks until the thread has finished. |
 | `join` | `bool join(int timeoutMillis) throws InterruptedException` | Blocks until the thread has finished or `timeoutMillis` have elapsed. Returns `true` if the thread finished, `false` if timeout. |
 | `isAlive` | `bool isAlive()` | Returns `true` if the thread has been started and has not yet finished; `false` otherwise. Non-blocking. |
+| `interrupt` | `void interrupt()` | Requests interruption of this thread: sets its interrupt flag. Non-blocking, callable from any thread. |
+| `isInterrupted` | `bool isInterrupted()` | Returns `true` if this thread's interrupt flag is set (i.e. an `interrupt()` is pending and has not been delivered). Does not clear the flag. |
 | `sleep` | `static void sleep(int millis) throws InterruptedException` | Puts the current thread to sleep for `millis` milliseconds. |
+
+**Interruption.** `interrupt()` sets a per-thread flag; it never stops a thread by force. The flag is turned into an `InterruptedException` only at the three *interruption points* — `join()`, `join(int)` and `sleep(int)` — which test it before blocking and while blocked:
+
+* A thread blocked in an interruption point when `interrupt()` is called wakes up and throws `InterruptedException` promptly, instead of waiting for the thread or the timeout it was waiting for. `join(int)` reports an interruption by throwing, never by returning `false`.
+* Throwing **clears** the flag: after delivery, `isInterrupted()` is `false` again and a subsequent wait blocks normally unless the thread is interrupted anew.
+* The flag is **sticky** otherwise. Interrupting a thread that is not currently at an interruption point (including one that has not been started yet, or has already finished) is well-defined: nothing is lost, the flag stays set — observable through `isInterrupted()` — and the next interruption point the thread reaches throws immediately. A task that never reaches one simply runs to completion.
+* Everything else that can block is **not** an interruption point: `Mutex.lock()`, `Semaphore.acquire()` and the blocking `system.io`/`system.net` operations declare no `InterruptedException` and are unaffected by the flag.
+* There is no `Thread` object for the thread running `main`, so nothing can interrupt it; `sleep()`/`join()` called from `main` never throw `InterruptedException` (the declaration is still part of their signature, and callers must still handle or declare it).
 
 **Example**
 
@@ -800,6 +810,22 @@ auto t = new system.thread.Thread(() => {
 });
 t.start();
 t.join();
+```
+
+**Example (interruption)**
+
+```nl
+auto worker = new system.thread.Thread(() => {
+    try {
+        system.thread.Thread.sleep(60000);
+        system.Out.println("finished waiting");
+    } catch (InterruptedException e) {
+        system.Out.println("cancelled");
+    }
+});
+worker.start();
+worker.interrupt();   // "cancelled", without waiting a minute
+worker.join();
 ```
 
 ---
@@ -945,8 +971,8 @@ All methods are **static**.
 
 | Method | Signature | Description |
 |--------|------------|-------------|
-| `list` | `static ProcessInfo[] list()` | Returns information for all processes visible to the current process (process list). |
-| `list` | `static ProcessInfo[] list(int pid)` | Returns information for the process with the given PID, or an empty array if not found. |
+| `list` | `static ProcessInfo[] list()` | Returns information for all processes visible to the current process (process list). Platform-dependent; see note below. |
+| `list` | `static ProcessInfo[] list(int pid)` | Returns information for the process with the given PID, or an empty array if not found. Platform-dependent; see note below. |
 | `run` | `static ProcessResult run(string[] args) throws IOException` | Starts a process with the given arguments; waits for it to finish. Returns exit code and captured stdout/stderr. |
 | `run` | `static ProcessResult run(string command) throws IOException` | Runs the command via the platform shell; waits for completion. |
 | `pid` | `static int pid()` | Returns the current process ID. |
@@ -957,6 +983,8 @@ All methods are **static**.
 **ProcessInfo** (result type): has `int pid`, `string command`, `string[] args`, `string|null user` (or platform-specific fields). See [Result types](#result-types) above.
 
 **ProcessResult** (result type): has `int exitCode`, `string stdout`, `string stderr`. See [Result types](#result-types) above.
+
+**Platform support for `list`/`list(pid)`:** process listing is inherently OS-specific (no portable standard API). Implementations are expected to support it on Linux and macOS at minimum; on any platform where it isn't implemented, `list()` returns an empty array and `list(pid)` behaves as "not found" rather than throwing. `command`/`args` splitting is best-effort on platforms that reconstruct the command line from a single string (no exact quoting round-trip guaranteed).
 
 **Security (command injection):** `run(string command)` passes the string to the platform shell for interpretation. Never interpolate user-controlled input (e.g. from `system.In.readLine()`, `args`, or network data) into the command string — an attacker could inject arbitrary shell commands. Prefer `run(string[] args)`, which bypasses the shell and passes arguments directly to the executable.
 
@@ -1426,7 +1454,7 @@ Standard exceptions used by the system API. The hierarchy (Runtime vs Checked) i
 | `IOException` | Checked | `system.io` | `system.io.File`, `system.io.Directory`, `system.io.Path`, `system.io.Grep`, and other I/O failures; **read/write/flush on closed FileHandle** |
 | `IOException` | Checked | `system.net` | `system.net.TcpListener`, `system.net.TcpStream`, `system.net.UdpSocket`, `system.net.Http` on connection or read/write failure; **read/write on closed TcpStream; send/receive on closed UdpSocket** |
 | `IOException` | Checked | `system.ps` | `system.ps.Process.run()`, `system.ps.Process.setCwd()` when the process cannot be started or the path is invalid |
-| `InterruptedException` | Checked | `system.thread` | Thrown when a thread is interrupted while blocked in `join()` or `sleep()`. |
+| `InterruptedException` | Checked | `system.thread` | Thrown by `join()`/`join(int)`/`sleep(int)` when the waiting thread's interrupt flag is set — see [Interruption](#systemthreadthread). |
 | `FormatException` | Checked | `system.time` | `system.time.DateTime.parse()` when the string format is invalid. |
 | `FormatException` | Checked | `system.text` | `system.text.Encoding.base64Decode()` when the string is not valid base64. |
 | `JsonFormatException` | Checked | `system.text.json` | `system.text.json.Json.parse()` when `text` is not valid JSON. Extends `system.text.FormatException`; carries `line`, `column`, `expectedToken`, `foundToken`. |

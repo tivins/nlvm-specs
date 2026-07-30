@@ -1120,6 +1120,17 @@ Memory visibility rules:
   may produce stale or inconsistent values. The VM is not required to provide sequential consistency for
   unsynchronized accesses.
 
+Interruption:
+
+- Each VM thread carries an **interrupt flag**, set by `Thread.interrupt()` from any thread and consulted only
+  by the interruption points listed in
+  [stdlib.md § system.thread.Thread](stdlib.md#systemthreadthread) (`join()`, `join(int)`, `sleep(int)`).
+  Writing the flag must be visible to the target thread without additional synchronization by the program.
+- A thread already blocked at an interruption point when its flag is set **must** be woken up and made to throw
+  `InterruptedException` promptly, rather than left to wait out the thread or the timeout it was blocked on.
+- The VM **must not** terminate a thread by force: interruption is a request the target thread observes, and a
+  task that never reaches an interruption point runs to completion.
+
 ---
 
 ## Garbage collection contract

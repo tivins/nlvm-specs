@@ -1,0 +1,35 @@
+---
+title: "system.thread.Thread.interrupt() — sleep() throws InterruptedException, delivery clears the flag"
+file_separator: "#NLFILE"
+expected_exit_code: 0
+expected_stdout: "cancelled interrupted=false"
+---
+
+#NLFILE test/threadinterrupt/Main.nl
+namespace test.threadinterrupt;
+class Main {
+	public static int main(string[] args) throws InterruptedException {
+		// The worker asks for a sleep it must never finish: the semaphore
+		// tells main the worker has entered its try block, main interrupts
+		// it, and a conformant implementation ends in milliseconds instead
+		// of a minute.
+		auto ready = new system.thread.Semaphore(0);
+		auto worker = new system.thread.Thread(() => {
+			try {
+				ready.release();
+				system.thread.Thread.sleep(60000);
+				system.Out.print("no throw");
+			} catch (InterruptedException e) {
+				system.Out.print("cancelled");
+			}
+		});
+		worker.start();
+		ready.acquire();
+		worker.interrupt();
+		worker.join();
+		// Throwing InterruptedException consumed the flag.
+		system.Out.print(" interrupted=");
+		system.Out.print(system.Bool.toString(worker.isInterrupted()));
+		return 0;
+	}
+}

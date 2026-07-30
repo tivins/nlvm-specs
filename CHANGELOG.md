@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.8.48 — 2026-07-30
+
+### Added
+
+- **docs/stdlib.md** — § system.thread.Thread: `void interrupt()` and `bool isInterrupted()`. `interrupt()` sets a per-thread interrupt flag; `isInterrupted()` reads it without clearing. Until now `InterruptedException` was declared by `join()`/`join(int)`/`sleep(int)` with no API able to raise it — nothing in the language could interrupt a thread, so the exception was unreachable by construction (nlvm issue [#4](https://github.com/nlvm-lang/nlvm/issues/4)).
+- **docs/stdlib.md** — § system.thread.Thread: **Interruption** note defining the semantics of the flag: `join()`/`join(int)`/`sleep(int)` are the only interruption points; a thread blocked at one wakes up and throws promptly (`join(int)` reports an interruption by throwing, never by returning `false`); delivery clears the flag; the flag is otherwise sticky (interrupting an unstarted, finished or non-blocking thread is well-defined and never lost); `Mutex.lock()`, `Semaphore.acquire()` and blocking `system.io`/`system.net` operations are *not* interruption points; the thread running `main` has no `Thread` object and therefore cannot be interrupted.
+- **tests/m7_0050_thread_interrupt.yaml** (new): conformance test for interruption — a worker blocked in `Thread.sleep(60000)` is interrupted, catches `InterruptedException`, and reports `isInterrupted() == false` afterwards (delivery clears the flag).
+- **docs/vm.md** — § Threading model: interruption requirements on the VM — per-thread interrupt flag, visible to the target without program-level synchronization, prompt wake-up of a thread already blocked at an interruption point, and no forced thread termination.
+
+### Changed
+
+- **docs/stdlib.md** — § Exceptions: `InterruptedException`'s description now points at the Interruption note instead of describing the trigger inline.
+
 ## 0.8.47 — 2026-07-21
 
 ### Added
