@@ -8,6 +8,7 @@ govern all optimizations. It complements [specs.md](specs.md) (language semantic
 ## Summary
 
 * [Principles](#principles)
+* [Optimization levels](#optimization-levels)
 * [Compiler optimizations](#compiler-optimizations)
 * [VM optimizations](#vm-optimizations)
 * [Prohibited transformations](#prohibited-transformations)
@@ -39,6 +40,33 @@ All optimizations must satisfy:
    The only observable differences may be performance and resource usage (e.g., memory, CPU). A program whose
    result depends on a value that [§ Observability](#observability) declares implementation-defined — such as
    `stackTrace.length()` — is not portable, and the specification promises nothing about it.
+
+---
+
+## Optimization levels
+
+Principles 3 and 4 are claims about *pairs* of builds: correctness must not depend on a specific optimization
+being applied, and a program must behave the same whichever ones an implementation applies. Checking either one
+requires building the same sources twice — which requires a way to ask for an unoptimized build, and a way to tell
+the two artifacts apart afterwards. Both are specified:
+
+| Concern | Where |
+|---------|-------|
+| Selecting the level | `nlc -O<n>` — [compiler.md § Options](compiler.md#options) |
+| Recording the level in the artifact | `opt_level` in the module header — [vm.md § Optimization level](vm.md#optimization-level) |
+| Reporting the level of a loaded module | `nlvm -v` — [vm.md § VM invocation](vm.md#vm-invocation-nlvm) |
+
+Two levels have a spec'd meaning:
+
+- **`-O0`** — **no** optimization from [Compiler optimizations](#compiler-optimizations) is applied. Every
+  implementation **must** support it, and it must be a normal build configuration, not a debug-only mode: it is
+  the reference side of every comparison in [Testing](#testing). Modules it emits carry `opt_level = 0`.
+- **`-O1`** — an implementation-chosen set of the optimizations below. *Which* set is deliberately unconstrained
+  (principle 3); only the observable outcome is constrained, by principles 1, 2 and 4.
+
+Levels above `1` are implementation-defined and should be documented by the implementation. VM optimizations
+([VM optimizations](#vm-optimizations)) are chosen by the VM at run time and are **not** governed by `-O<n>`,
+which is a compile-time option; an implementation that lets them be selected does so in its own way.
 
 ---
 
@@ -164,10 +192,16 @@ introducing a new kind of divergence. Concretely:
 
 ## Testing
 
-- **Regression tests:** Run the same program with and without optimizations; compare outputs, exit codes, and
-  exception behavior. All existing tests in `tests/` must pass regardless of optimization level.
+- **Regression tests:** Build the same program twice — `nlc -O0` and `nlc -O1` (see
+  [Optimization levels](#optimization-levels)) — run both, and compare stdout, stderr, and exit code. They must be
+  identical, with the two exceptions listed below. All existing tests in `tests/` must pass at every optimization
+  level. Because the level is recorded in the module (`opt_level`), the two artifacts remain distinguishable after
+  the fact and a run can be attributed to the build it came from.
 - **Optimization-sensitive assertions:** Conformance tests must not assert an exact stack-trace frame count, nor
   expect `StackOverflowException` from recursion in tail position — both are implementation-defined
   (see [Observability](#observability)). A test that verifies a stack trace should assert the presence and
-  relative order of the frames it cares about.
+  relative order of the frames it cares about. These are also the only two ways the outputs of an `-O0` and an
+  `-O1` build of the same program are allowed to differ: a test whose stderr carries a stack trace, or whose
+  termination depends on stack exhaustion, must be excluded from the byte-for-byte comparison above rather than
+  taken as a conformance failure.
 - **Performance tests:** Optional; may be defined in a separate document or in [milestones.md](milestones.md).

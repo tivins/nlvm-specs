@@ -51,3 +51,20 @@ Coherence issues reported outside the audit (typically as GitHub issues) are lis
   divergence is stated explicitly as the only sanctioned difference in which exceptions are thrown.
   Reported in [nlvm-specs#1](https://github.com/nlvm-lang/nlvm-specs/issues/1); unblocks the inlining and
   tail-call checkboxes of [nlvm#18](https://github.com/nlvm-lang/nlvm/issues/18).
+
+- [x] **P-2 — The optimization level had no spec home** *(fixed 0.8.50)*.
+  `optimizations.md` § Testing mandated running a program "with and without optimizations", but no compiler option
+  selected a level and the module format had nowhere to record one — so the mandated test was unspecifiable, and
+  an implementation needing to record the level had to burn a spec-owned `version` number. Resolved on both sides:
+  `nlc -O<n>` added to [compiler.md § Options](../docs/compiler.md#options) (`-O0` = no optimization and
+  **mandatory**, `-O1` = implementation-chosen set, above that implementation-defined); module format **version 3**
+  adds an `opt_level` byte after `version` ([vm.md § Optimization level](../docs/vm.md#optimization-level)); and
+  the `version` namespace is now split, `0x0000`–`0x7FFF` for the spec and `0x8000`–`0xFFFF` for implementations
+  ([vm.md § Format version](../docs/vm.md#format-version)), so this class of collision cannot recur.
+  Reported in [nlvm-specs#2](https://github.com/nlvm-lang/nlvm-specs/issues/2); ratifies the extension shipped by
+  nlvm 0.24.0 ([nlvm#24](https://github.com/nlvm-lang/nlvm/issues/24)) and unblocks the compiler-side items of
+  [nlvm#18](https://github.com/nlvm-lang/nlvm/issues/18).
+
+  *Deferred:* a generic attribute/extension section (build ids, source hashes, profile data) was considered and
+  rejected as speculative for 0.8; if a second kind of build metadata is needed, it should be revisited before
+  1.0 rather than adding a fourth version.

@@ -92,7 +92,7 @@ Generate the binary module format defined in vm.md from the validated AST.
 
 ### Scope
 
-- **Module format** — [vm.md § Module format](vm.md#module-format): magic number, version, constant pool, class/field/method descriptors, flags.
+- **Module format** — [vm.md § Module format](vm.md#module-format): magic number, version (`3`; the version namespace is split into a spec range and an implementation range — [vm.md § Format version](vm.md#format-version)), `opt_level`, constant pool, class/field/method descriptors, flags.
 - **Constant pool** — [vm.md § Constant pool](vm.md#constant-pool): INT, FLOAT, STRING, CLASS, FIELD_REF, METHOD_REF, TYPE_DESC entries.
 - **Type descriptors** — [vm.md § Type descriptors](vm.md#type-descriptors): encoding for all types.
 - **Instruction emission** for all compilation strategies — [vm.md § Compilation strategies](vm.md#compilation-strategies):
@@ -122,7 +122,7 @@ Build the execution engine for primitive programs (no objects, no exceptions yet
 
 ### Scope
 
-- **Module loader:** read the binary module format, parse constant pool, build internal class table.
+- **Module loader:** read the binary module format, reject an unsupported `version` ([vm.md § Format version](vm.md#format-version)), parse constant pool, build internal class table.
 - **Value representation** — [vm.md § Value representation](vm.md#value-representation): tagged values (9-byte slots), primitive type tags.
 - **Call frame and operand stack** — [vm.md § Call frame and operand stack](vm.md#call-frame-and-operand-stack): frame creation, local variables, stack pointer.
 - **Static storage** — [vm.md § Static storage](vm.md#static-storage): per-class static fields, default initialization.
@@ -260,6 +260,9 @@ Implement optional compiler and VM optimizations as defined in [optimizations.md
 
 ### Scope
 
+- **Optimization levels** — [optimizations.md § Optimization levels](optimizations.md#optimization-levels):
+  `nlc -O<n>`, with `-O0` (no optimization) mandatory, and the selected level written to each module's `opt_level`
+  ([vm.md § Optimization level](vm.md#optimization-level)).
 - **Compiler optimizations** — [optimizations.md § Compiler optimizations](optimizations.md#compiler-optimizations):
   constant folding, constant propagation, dead code elimination, devirtualization, inlining, tail call optimization,
   string literal concatenation, incremental compilation.
@@ -270,10 +273,10 @@ Implement optional compiler and VM optimizations as defined in [optimizations.md
 
 ### Testable at this stage
 
-- **Regression tests:** run all `tests/` programs with and without optimizations; compare outputs, exit codes, and
-  exception behavior. All tests must pass regardless of optimization level — stack-trace frame counts and
-  `StackOverflowException` from tail-position recursion are implementation-defined and must not be asserted
-  ([optimizations.md § Observability](optimizations.md#observability)).
+- **Regression tests:** build every `tests/` program at `-O0` and at `-O1` and compare stdout, stderr and exit code
+  ([optimizations.md § Testing](optimizations.md#testing)). All tests must pass at every optimization level —
+  stack-trace frame counts and `StackOverflowException` from tail-position recursion are implementation-defined and
+  must not be asserted ([optimizations.md § Observability](optimizations.md#observability)).
 - **Performance benchmarks:** optional; compare execution time or memory usage with/without optimizations.
 
 ---

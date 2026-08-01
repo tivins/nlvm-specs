@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.8.50 — 2026-08-01
+
+### Added
+
+- **docs/compiler.md** — § Compiler invocation (nlc) § Options: `-O<n>`. `-O0` applies **no** optimization and **must** be a supported configuration; `-O1` applies an implementation-chosen set from optimizations.md § Compiler optimizations; levels above `1` are implementation-defined; the default level is implementation-defined. The selected level is recorded in every emitted module. A note states that `-O<n>` governs code transformations only — incremental compilation is a build strategy controlled solely by `--incremental`, and `-O0 --incremental` must produce the same modules as `-O0` (spec issue [#2](https://github.com/nlvm-lang/nlvm-specs/issues/2)).
+- **docs/optimizations.md** — § Optimization levels (new): why principles 3 and 4 are only checkable by building the same sources twice, where each half is specified (`nlc -O<n>`, `opt_level`, `nlvm -v`), and the spec'd meaning of `-O0` and `-O1`. VM optimizations are chosen at run time and are **not** governed by `-O<n>`.
+- **docs/vm.md** — § Module format: **module format version 3**, adding `opt_level` (`u8`) at offset 6, immediately after `version`; `constant_pool_count` moves to offset 7 and every following field is byte-for-byte the version 2 layout.
+- **docs/vm.md** — § Module format: **Optimization level** (new). `0` = no optimization, `1` = implementation-chosen set, `2`–`255` implementation-defined. The compiler must write the level it actually applied; the byte is metadata, not a directive, and a VM may reject an unrecognized level but must not clamp or reinterpret it; a program mixing modules built at different levels is valid and must not be rejected; in a version ≤ 2 module the level is *unrecorded*, not `0`.
+- **docs/vm.md** — § Module format: **Format version** (new). The `version` namespace is split — `0x0000`–`0x7FFF` owned by this specification (`1`, `2`, `3` assigned), `0x8000`–`0xFFFF` for implementation-defined layouts. An implementation needing an undefined layout must take a number from the implementation range, never an unassigned spec number; a VM must reject a version it does not support rather than guess (the magic number and integrity trailer are identical across versions).
+
+### Changed
+
+- **docs/optimizations.md** — § Testing: the regression-test bullet now names the actual comparison (`nlc -O0` vs `nlc -O1`, comparing stdout, stderr and exit code) instead of the unspecifiable "with and without optimizations", and notes that `opt_level` keeps the two artifacts distinguishable afterwards. The optimization-sensitive-assertions bullet now states that stack-trace frame counts and `StackOverflowException` from tail-position recursion are the **only** permitted output differences between the two builds, and that such tests are excluded from the comparison rather than counted as failures.
+- **docs/compiler.md** — § Optimizations: points at `-O<n>` and records that `-O0` must be supported so the two builds can be compared, while the passes applied above level `0` remain free (principle 3).
+- **docs/vm.md** — § VM invocation (nlvm): `-v, --verbose` should report each loaded module's `version` and `opt_level` (`unrecorded` for a version ≤ 2 module), making a mixed-level build identifiable.
+
+### Updated references
+
+- **docs/milestones.md** — M3 scope: module format version `3`, `opt_level`, and the split version namespace. M4 scope: the loader must reject an unsupported `version`. M9 scope: new **Optimization levels** item. M9 testable: regression tests build at `-O0` and `-O1`.
+- **review/coherence.md** — item **P-2** (this resolution) closed in 0.8.50, with the deferred generic attribute section recorded.
+
 ## 0.8.49 — 2026-08-01
 
 ### Added

@@ -668,6 +668,11 @@ The compiler **may** apply optional optimizations such as constant folding, dead
 inlining, and incremental compilation. All optimizations must preserve observable semantics. See [optimizations.md](optimizations.md) for the
 full optimization contract (compiler and VM).
 
+Which optimizations run is selected by `-O<n>` (see [Options](#options)). `-O0` — no optimization at all — **must**
+be supported, so that the same program can be built both ways and the two builds compared
+([optimizations.md § Testing](optimizations.md#testing)). Which passes any level above `0` applies remains free
+(principle 3, *implementation freedom*).
+
 ---
 
 ## Compiler invocation (nlc)
@@ -693,7 +698,12 @@ The compiler is invoked as:
 | `-h`, `--help` | Print usage and exit. |
 | `-Werror` | Treat all warnings as errors. |
 | `-v`, `--verbose` | Verbose diagnostics (implementation-defined). |
+| `-O<n>` | Optimization level. `-O0` applies **no** optimization and **must** be a supported configuration; `-O1` applies an implementation-chosen set from [optimizations.md § Compiler optimizations](optimizations.md#compiler-optimizations); levels above `1` are implementation-defined. The default level when the option is absent is implementation-defined. The selected level is recorded in every emitted module (`opt_level`, see [vm.md § Module format](vm.md#module-format)). See [optimizations.md § Optimization levels](optimizations.md#optimization-levels). |
 | `--incremental`, `-i` | *(Optional)* Enable incremental compilation. Cache compiled modules and recompile only changed files and their dependents. See [optimizations.md § Compiler optimizations](optimizations.md#compiler-optimizations). |
+
+`-O<n>` governs **code transformations** only. Incremental compilation is a build strategy, not a transformation of
+the emitted code, and is controlled solely by `--incremental`: `-O0 --incremental` is a valid combination and must
+produce the same modules as `-O0` alone.
 
 ### Exit codes
 

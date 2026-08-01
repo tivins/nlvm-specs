@@ -10,6 +10,8 @@ the compiler verifies*; this document defines *how* compiled code is represented
 * [Architecture overview](#architecture-overview)
 * [Value representation](#value-representation)
 * [Module format](#module-format)
+    * [Format version](#format-version)
+    * [Optimization level](#optimization-level)
     * [Constant pool](#constant-pool)
     * [Type descriptors](#type-descriptors)
     * [Module integrity](#module-integrity)
@@ -135,9 +137,10 @@ A compiled module contains the following sections in order. Multi-byte integers 
 | Offset | Field | Type | Description |
 |--------|-------|------|-------------|
 | 0 | `magic` | `u32` | `0x4E4C4D00` (ASCII `NLM\0`). |
-| 4 | `version` | `u16` | Module format version (currently `2`; version 2 adds the line-number table and the integrity trailer). |
-| 6 | `constant_pool_count` | `u16` | Number of entries in the constant pool (1-indexed; entry 0 is unused). |
-| 8 | `constant_pool` | varies | Constant pool entries (see below). |
+| 4 | `version` | `u16` | Module format version (currently `3`; version 2 added the line-number table and the integrity trailer, version 3 adds `opt_level`). See [Format version](#format-version). |
+| 6 | `opt_level` | `u8` | Optimization level applied when this module was compiled. Version 3 and later only. See [Optimization level](#optimization-level). |
+| 7 | `constant_pool_count` | `u16` | Number of entries in the constant pool (1-indexed; entry 0 is unused). |
+| 9 | `constant_pool` | varies | Constant pool entries (see below). |
 | … | `this_class` | `u16` | Constant pool index of a `CLASS` entry for the class defined in this module. |
 | … | `class_flags` | `u16` | Bit flags for the class (see below). |
 | … | `super_class` | `u16` | Constant pool index of a `CLASS` entry for the parent class, or `0` if none. |
@@ -161,6 +164,49 @@ Class flag bits:
 | 4 | `FINAL` | Final class (`final class`). At link time, the VM **must** reject any module whose `super_class` refers to a class with this flag. |
 
 `ABSTRACT` and `FINAL` are mutually exclusive (the compiler enforces E049; the loader rejects a module with both bits set). For a module with the `INTERFACE` flag, the `interfaces` list holds the **extended** interfaces (`interface A extends B, C`; see [specs.md § Interface inheritance](specs.md#interface-inheritance)) and `super_class` is `0`.
+
+### Format version
+
+`version` is a **shared namespace owned by this specification**. It is split as follows:
+
+| Range | Owner | Meaning |
+|-------|-------|---------|
+| `0x0000`–`0x7FFF` | This specification | Spec-defined layouts. `1`, `2` and `3` are assigned; the rest are unassigned and **must not** be used by an implementation. |
+| `0x8000`–`0xFFFF` | Implementations | Implementation-defined layouts. A conforming VM **may** reject any of them; no portable meaning is attached. |
+
+Rules:
+
+- An implementation that needs a layout the specification does not define **must** take a number from the
+  implementation range, never an unassigned spec number. Two implementations may then pick the same number, but
+  neither collides with a future spec version.
+- A VM **must** reject a module whose `version` it does not support (load error, non-zero exit); it **must not**
+  guess the layout from the magic number or the integrity trailer, both of which are identical across versions.
+- A VM that supports version 3 **should** also accept versions 1 and 2, which remain readable: version 3 is
+  version 2 with `opt_level` inserted after `version`, and every following field is unchanged.
+
+### Optimization level
+
+`opt_level` records the optimization level the compiler applied, i.e. the `-O<n>` it was invoked with (see
+[compiler.md § Options](compiler.md#options)). Its purpose is to make an artifact self-describing: given a `.nlm`
+on disk, a human or the VM can tell which build it is looking at.
+
+| Value | Meaning |
+|-------|---------|
+| `0` | No optimization applied. Corresponds to `nlc -O0`. |
+| `1` | An implementation-chosen set of the optimizations in [optimizations.md § Compiler optimizations](optimizations.md#compiler-optimizations). Corresponds to `nlc -O1`. |
+| `2`–`255` | Implementation-defined higher levels. |
+
+Rules:
+
+- The compiler **must** write the level it actually applied. Emitting `0` while applying optimizations is
+  non-conforming.
+- `opt_level` is **metadata, not a directive**: it does not change how the VM executes the module. A VM **may**
+  reject a module whose `opt_level` it does not recognize, but **must not** silently clamp or reinterpret it.
+- A program built from modules with **different** `opt_level` values is valid and **must not** be rejected: the
+  standard library and third-party modules are routinely distributed prebuilt at a level the current build did not
+  choose. Reporting the mix is a diagnostic concern (see [VM invocation](#vm-invocation-nlvm)).
+- In a version 1 or 2 module the level is **unrecorded**, not `0`. Such a module may well have been optimized; a VM
+  **must not** report it as unoptimized.
 
 ### Constant pool
 
@@ -1078,7 +1124,7 @@ If `--` is used, everything after it is passed as program arguments; otherwise, 
 |--------|-------------|
 | `--version` | Print VM version and exit. |
 | `-h`, `--help` | Print usage and exit. |
-| `-v`, `--verbose` | Verbose execution (e.g. module loading, implementation-defined). |
+| `-v`, `--verbose` | Verbose execution (e.g. module loading, implementation-defined). An implementation **should** report each loaded module's `version` and `opt_level` (`unrecorded` for a version ≤ 2 module), so that a mixed-level build is identifiable — see [Module format](#module-format). |
 | `-D<path>`, `--module-path <path>` | *(Optional)* Additional directory or list of directories for resolving module dependencies (implementation-defined). |
 
 ### Exit codes
