@@ -1,0 +1,28 @@
+---
+title: "Exception.stackTrace — non-empty and innermost-first at every optimization level"
+file_separator: "#NLFILE"
+expected_exit_code: 0
+expected_stdout: "direct=ok nested=ok"
+---
+
+#NLFILE test/stacktrace/Main.nl
+namespace test.stacktrace;
+class Main {
+	// `make()` is a prime inlining candidate: small, static, single call site.
+	private static Exception make() {
+		return new Exception("boom");
+	}
+	public static int main(string[] args) {
+		// The trace is captured in the base Exception constructor, so the `new`
+		// site always has a frame — whether or not `make()` was inlined into
+		// main. The frame *count* is implementation-defined (inlining and TCO
+		// elide callers), so this test asserts only what holds at every
+		// optimization level: the trace is never empty. See
+		// optimizations.md § Stack traces and frame-eliding optimizations.
+		auto direct = new Exception("boom");
+		auto nested = make();
+		system.Out.print(direct.stackTrace.length() > 0 ? "direct=ok" : "direct=empty");
+		system.Out.print(nested.stackTrace.length() > 0 ? " nested=ok" : " nested=empty");
+		return 0;
+	}
+}

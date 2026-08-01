@@ -35,3 +35,19 @@ each item and its resolution). Remaining *forward-looking* work is tracked elsew
 
 A new audit should be performed before tagging **0.9 / 1.0** to re-verify cross-document coherence after the
 0.8.41–0.8.43 changes.
+
+---
+
+## Items raised after the 2026-03-03 audit
+
+Coherence issues reported outside the audit (typically as GitHub issues) are listed here with their resolution.
+
+- [x] **P-1 — Frame-eliding optimizations vs. the observability contract** *(fixed 0.8.49)*.
+  `optimizations.md` permitted inlining and tail call optimization while listing stack traces as observable, and
+  TCO additionally changes whether `StackOverflowException` is thrown at all — two transformations principle 1
+  then forbade. Resolved by narrowing observability rather than restricting the optimizations: the number and
+  identity of `stackTrace` frames are implementation-defined (with three invariants that hold at every
+  optimization level — non-empty, innermost-first, no fabricated frames), and the TCO/`StackOverflowException`
+  divergence is stated explicitly as the only sanctioned difference in which exceptions are thrown.
+  Reported in [nlvm-specs#1](https://github.com/nlvm-lang/nlvm-specs/issues/1); unblocks the inlining and
+  tail-call checkboxes of [nlvm#18](https://github.com/nlvm-lang/nlvm/issues/18).

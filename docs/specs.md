@@ -2498,6 +2498,14 @@ captures the current call stack and assigns it to `stackTrace` before the constr
 `readonly` rule — the field is assigned inside `construct`, like any other readonly property — and requires **no
 readonly bypass** by the VM (see [vm.md § Stack trace construction](vm.md#stack-trace-construction)).
 
+**Trace fidelity.** `stackTrace` is a diagnostic view of the call stack, not a guaranteed value. The number and
+identity of its frames are **implementation-defined**: a stripped build reports `line = 0`, and a build applying
+inlining or tail call optimization omits the frames those optimizations eliminate. Guaranteed at every
+optimization level: the trace is never empty (it always contains the `new` site), frames are ordered innermost
+first, and no frame is reported for a call the program does not make. A portable program may print or log the
+trace, but must not branch on `stackTrace.length()` or on the `line`/`file` of a particular frame — see
+[optimizations.md § Stack traces and frame-eliding optimizations](optimizations.md#stack-traces-and-frame-eliding-optimizations).
+
 **`printStackTrace()`.** Writes `message` to `system.Err`, followed by one line per `stackTrace` frame in the
 format `"    at " + file + ":" + line`, in capture order (throw site first). This mirrors the format the VM itself
 uses when an unhandled exception reaches the top of `main` (see [vm.md § Program startup](vm.md#program-startup)).

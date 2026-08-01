@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.8.49 — 2026-08-01
+
+### Added
+
+- **docs/optimizations.md** — § Observability: **Stack traces and frame-eliding optimizations** (new). The number and identity of the frames in `Exception.stackTrace` are **implementation-defined**, because inlining and tail call optimization remove frames the trace walk would otherwise see. Three invariants hold at every optimization level: the trace is never empty (it contains the `new` site), frames are ordered innermost first, and no frame may be fabricated for a call the program does not make. Reconstructing elided frames from inline metadata is quality-of-implementation, not conformance. Portable programs must not branch on `stackTrace.length()` or on a frame's `line`/`file` (spec issue [#1](https://github.com/nlvm-lang/nlvm-specs/issues/1)).
+- **docs/optimizations.md** — § Observability: **Tail call optimization and `StackOverflowException`** (new). Unbounded tail-position recursion throws `StackOverflowException` without TCO and runs without stack growth with it; the divergence is permitted (maximum depth is already implementation-defined) and is the **only** sanctioned way for the set of exceptions thrown to differ between optimization levels. `StackOverflowException` is a resource-exhaustion signal, not a control-flow mechanism.
+- **docs/optimizations.md** — § Prohibited transformations: item 5, **fabricating or reordering call frames** — optimizations may omit frames, never invent them or report them out of innermost-to-outermost order.
+- **docs/optimizations.md** — § Testing: conformance tests must not assert an exact stack-trace frame count nor expect `StackOverflowException` from tail-position recursion.
+- **tests/m6_0010_stacktrace_shape.yaml** (new): conformance test for the optimization-independent guarantee — an exception constructed directly and one returned by an inlinable static helper both carry a non-empty `stackTrace`; no frame count is asserted.
+
+### Changed
+
+- **docs/optimizations.md** — § Principles: principle 1 (*semantics preservation*) now defers to § Observability for what "observable" means; principle 4 (*portability*) states that a program depending on an implementation-defined value such as `stackTrace.length()` is not portable. This removes the contradiction between the permitted optimizations and the two principles.
+- **docs/optimizations.md** — § Observability: the "Exceptions" bullet now covers exception types, order, throw point and catching handler, and excludes trace frames; "Call stack depth" added to the *not observable* list.
+- **docs/optimizations.md** — § Compiler optimizations: the **Inlining** and **Tail call optimization** rows point at the new sections.
+- **docs/vm.md** — § Call frame and operand stack: the **Stack overflow** note records that a runtime applying tail call optimization may never throw `StackOverflowException` for tail-position recursion, and should document that alongside its maximum call stack depth.
+- **docs/vm.md** — § Stack trace construction: **Optimized builds** note — the walk only sees frames that exist; frame count and identity are implementation-defined, subject to the three invariants.
+- **docs/specs.md** — § Exception class hierarchy: **Trace fidelity** note — `stackTrace` is a diagnostic view, not a guaranteed value; do not branch on frame count or on a frame's `line`/`file`.
+- **docs/stdlib.md** — § Exceptions: `StackOverflowException` row now states it is not a control-flow mechanism and may never be thrown under tail call optimization.
+
+### Updated references
+
+- **docs/milestones.md** — M6 testable: stack-trace tests assert frame presence and order, not an exact count. M9 testable: regression tests must not assert frame counts or `StackOverflowException` from tail-position recursion.
+- **review/coherence.md** — new section *Items raised after the 2026-03-03 audit*, with item **P-1** (this resolution) closed in 0.8.49.
+
 ## 0.8.48 — 2026-07-30
 
 ### Added

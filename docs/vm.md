@@ -325,6 +325,13 @@ stack.
 `StackOverflowException` (a `RuntimeException`). The maximum depth is implementation-defined but must be
 documented by the runtime.
 
+An implementation applying [tail call optimization](optimizations.md#compiler-optimizations) reuses the current
+frame for calls in tail position instead of creating a new one, so recursion that overflows without the
+optimization may run indefinitely with it. This divergence is permitted — depth is implementation-defined and
+`StackOverflowException` is not a control-flow mechanism — but a runtime that applies the optimization should say
+so where it documents its maximum depth. See
+[optimizations.md § Tail call optimization and `StackOverflowException`](optimizations.md#tail-call-optimization-and-stackoverflowexception).
+
 ### Static storage
 
 Each class has a **static storage area** holding one slot per `static` field. Static fields are initialized to
@@ -711,6 +718,13 @@ Each `ExecutionPoint` contains:
   (`line_table`), by selecting the entry covering the frame's current `pc`. If the table is absent
   (`line_table_count = 0`), `line` is `0`.
 - `file`: the source file path (derived from the module's class name and namespace).
+
+**Optimized builds.** The walk only sees frames that exist. Inlining and tail call optimization remove frames an
+unoptimized build would have created, so the number and identity of the entries in `stackTrace` are
+implementation-defined: a VM may report elided frames when the compiler supplies inline metadata, but is not
+required to. Three properties must hold at every optimization level — the trace is never empty, frames are
+ordered innermost first, and no frame is reported for a call the program does not make. See
+[optimizations.md § Stack traces and frame-eliding optimizations](optimizations.md#stack-traces-and-frame-eliding-optimizations).
 
 ---
 

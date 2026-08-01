@@ -196,7 +196,9 @@ Complete the control flow model.
 ### Testable at this stage
 
 - `try`/`catch`/`finally` tests: caught exceptions, uncaught propagation, nested try blocks.
-- Stack trace content verification (via `expected_stderr` or program-level output).
+- Stack trace content verification (via `expected_stderr` or program-level output) — assert the presence and
+  relative order of the frames under test, never an exact frame count, which frame-eliding optimizations make
+  implementation-defined ([optimizations.md § Stack traces and frame-eliding optimizations](optimizations.md#stack-traces-and-frame-eliding-optimizations)).
 - Anonymous function tests: capture, mutation, passing as callbacks.
 
 ---
@@ -269,7 +271,9 @@ Implement optional compiler and VM optimizations as defined in [optimizations.md
 ### Testable at this stage
 
 - **Regression tests:** run all `tests/` programs with and without optimizations; compare outputs, exit codes, and
-  exception behavior. All tests must pass regardless of optimization level.
+  exception behavior. All tests must pass regardless of optimization level — stack-trace frame counts and
+  `StackOverflowException` from tail-position recursion are implementation-defined and must not be asserted
+  ([optimizations.md § Observability](optimizations.md#observability)).
 - **Performance benchmarks:** optional; compare execution time or memory usage with/without optimizations.
 
 ---
